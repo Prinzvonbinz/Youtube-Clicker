@@ -2,579 +2,514 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>YouTube & Twitch Clicker</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --main-bg: #18181b;
-      --card-bg: #23232b;
-      --accent: #ff001a;
-      --accent2: #9147ff;
-      --shadow: rgba(0,0,0,0.3);
-      --text: #f8fafc;
-      --btn: #27272a;
-      --btn-hover: #3f3f46;
-      --border: #333;
-      --radius: 1.2em;
+    html,body {
+      margin:0; padding:0;
+      font-family:'Roboto',sans-serif;
+      background: linear-gradient(135deg, #181818 0%, #282828 100%);
+      color:#fafafa; min-height:100vh;
+      height:100%;
     }
-    html, body {
-      margin:0; padding:0; min-height:100vh;
-      background: var(--main-bg); color:var(--text); font-family:sans-serif;
-      overflow-x:hidden;
+    #app {
+      max-width:430px;margin:0 auto;min-height:100vh;padding-bottom:80px;
     }
-    .container {
-      max-width:430px; margin:0 auto; min-height:100vh;
-      padding:1em; display:flex; flex-direction:column; align-items:center;
+    .menu {display:none;}
+    .menu.active {display:block;}
+    .center {
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
     }
-    .card {
-      background:var(--card-bg); border-radius:var(--radius); box-shadow:0 2px 8px var(--shadow);
-      margin:1em 0; padding:1.5em; width:100%; max-width:380px; text-align:center;
+    .profile-pic-btn {
+      width:120px;height:120px;border-radius:50%;border:none;outline:none;
+      box-shadow:0 0 8px #0006;
+      object-fit:cover;cursor:pointer;
+      background:#fff;
+      margin-bottom:18px;
+      transition:transform 0.1s;
     }
-    h1, h2, h3 {margin:.4em 0;}
-    input, button, select {
-      font-size:1.1em; border-radius:.7em; border:1px solid var(--border);
-      padding:.5em 1.2em; margin:.3em 0; background:var(--btn); color:var(--text);
-      transition:.2s; outline:none;
+    .btn-main {
+      display:flex;align-items:center;justify-content:center;
+      width:170px;height:170px;
+      border-radius:50%;border:none;outline:none;
+      box-shadow:0 0 32px #ff000055;
+      background:#fff;
+      cursor:pointer;margin:0 auto;
+      margin-bottom:12px;
+      font-size:2.6em;font-weight:700;
+      transition:transform 0.1s;
+      overflow:hidden;position:relative;
     }
-    input[type="file"] {padding:.3em;}
-    button {
-      min-width:120px; font-weight:bold; box-shadow:0 2px 6px var(--shadow);
-      display:inline-flex; align-items:center; justify-content:center;
-      cursor:pointer; border:none;
-    }
-    button:active {transform:scale(0.97);}
-    button:hover, .menu-btn.selected {background:var(--btn-hover);}
-    .main-btn {
-      width:140px;height:140px; border-radius:50%; font-size:2.2em;
-      margin:1.2em auto; display:flex; flex-direction:column; align-items:center; justify-content:center;
-      border:4px solid var(--accent); background:var(--accent); color:#fff; font-weight:bolder; box-shadow:0 0 16px var(--accent);
-      position:relative;
-      overflow:visible;
-    }
-    .main-btn.twitch {
-      border-color: var(--accent2); background: var(--accent2); box-shadow:0 0 16px var(--accent2);
-    }
-    .main-btn img {
-      width:80px; height:80px; border-radius:50%; margin-bottom:.1em; object-fit:cover; border:3px solid #fff;
-      box-shadow:0 0 6px #0009;
-      display:block;
-    }
+    .btn-main img {width:100%;height:100%;object-fit:cover;}
+    .btn-main:active {transform:scale(0.97);}
+    .stats {padding:16px 0;text-align:center;}
+    .stat {display:inline-block;margin:0 12px;font-size:1.15em;}
+    .big {font-size:2.2em;font-weight:bold;}
     .menu-bar {
-      display:flex; gap:.6em; justify-content:center; margin:0 0 1em 0;
+      position:fixed;bottom:0;left:0;width:100vw;max-width:430px;
+      background:#232323;display:flex;justify-content:space-around;
+      box-shadow:0 -2px 12px #0009;z-index:50;
+      height:64px;
     }
-    .menu-btn {
-      border-radius:.8em; padding:.5em 1.2em; background:var(--btn); color:var(--text);
-      font-weight:bold; border:none; cursor:pointer; min-width:80px;
+    .menu-bar button {
+      flex:1;border:none;background:none;color:#fff;font-size:1.2em;
+      padding:8px 0;cursor:pointer;
+      transition:background 0.1s;
     }
-    .hidden {display:none!important;}
-    .shop-item {
-      background:var(--main-bg); border-radius:.8em; margin:.7em 0; padding:.8em 1em; box-shadow:0 1px 4px var(--shadow);
-      display:flex; justify-content:space-between; align-items:center; gap:.3em;
-      font-size:1em;
+    .menu-bar button.active {background:#ff000012;}
+    .shop-list, .video-list {padding:0;margin:0;list-style:none;}
+    .shop-item, .video-item {
+      background:#262626;margin:12px 0;padding:14px;border-radius:14px;
+      display:flex;align-items:center;justify-content:space-between;
+      box-shadow:0 2px 8px #0002;
     }
-    .shop-label {font-weight:bold;}
-    .shop-upgrade {background:var(--btn-hover);}
-    .shop-cost {color:#fff2; margin-right:.5em;}
-    .progress-bar {
-      height:1.2em; background:var(--btn-hover); border-radius:1em; margin:.5em 0;
-      position:relative; overflow:hidden;
+    .shop-item .info {flex:1;}
+    .shop-item .title {font-weight:700;}
+    .shop-item .desc {font-size:0.98em;color:#bbb;}
+    .shop-item .price {font-size:1.15em;font-weight:700;}
+    .shop-item button {
+      margin-left:16px;background:#ff0000;color:#fff;
+      border:none;padding:10px 18px;border-radius:8px;font-size:1em;cursor:pointer;
+      transition:background 0.1s;
     }
-    .progress-bar-inner {
-      height:100%; background:var(--accent); border-radius:1em; width:0%; transition:.3s;
+    .shop-item button:disabled {background:#888;cursor:not-allowed;}
+    .video-item .info{flex:1;}
+    .video-item .title{font-weight:700;}
+    .video-item .meta{font-size:0.98em;color:#aaa;}
+    .cut-menu input[type='range']{width:100%;}
+    .cut-btn {
+      background:#ff0000;color:#fff;border:none;padding:12px 32px;
+      border-radius:12px;font-size:1.3em;font-weight:700;cursor:pointer;
+      margin-top:22px;
     }
-    .progress-bar.twitch .progress-bar-inner {
-      background:var(--accent2);
+    .cut-btn:disabled{background:#888;cursor:not-allowed;}
+    .profile-inp{display:block;width:100%;margin-bottom:14px;padding:8px;font-size:1em;}
+    .code-box{background:#222;padding:10px 20px;border-radius:10px;font-size:1.15em;word-break:break-all;letter-spacing:1px;}
+    .small-btn{
+      background:#ff0000;color:#fff;border:none;padding:8px 20px;border-radius:7px;margin:10px 0;cursor:pointer;
     }
-    .videos-list {
-      text-align:left; max-height:180px; overflow:auto; font-size:.98em;
-      background:var(--btn); border-radius:.6em; padding:.7em 1em; margin:.8em auto;
+    .play-btn {
+      display:inline-block;background:#ffd700;color:#000;font-weight:900;
+      border-radius:14px;padding:8px 22px;margin:12px 0;
+      box-shadow:0 2px 10px #ffed4a55;font-size:1.23em;
+      border:2px solid #bfa100;
     }
-    .videos-list li {margin:.2em 0;}
-    .profile-pic-big {
-      width:110px; height:110px; border-radius:50%; object-fit:cover; border:5px solid var(--accent);
-      margin:0 auto 1em auto; display:block; box-shadow:0 4px 16px var(--accent);
+    .tw-btn-main {
+      display:flex;align-items:center;justify-content:center;
+      width:120px;height:120px;border-radius:50%;border:none;
+      background:#6441a5;box-shadow:0 0 32px #6441a555;
+      margin:0 auto 12px;font-size:2.1em;overflow:hidden;position:relative;cursor:pointer;
     }
-    .profile-pic-small {width:32px; height:32px; border-radius:50%; object-fit:cover; margin-right:.4em;}
-    .input-label {font-size:.97em; margin-top:.7em; color:#bbb;}
-    .code-box {
-      background:var(--btn-hover); padding:.6em 1.2em; border-radius:.8em; font-size:1.1em; margin:.6em auto .6em auto;
-      letter-spacing:.07em; font-family:monospace; user-select:all;
+    .tw-btn-main img{width:100%;height:100%;object-fit:cover;}
+    .tw-btn-main:active{transform:scale(0.96);}
+    .twitch-lock {
+      background:#4444;position:absolute;top:0;left:0;width:100%;height:100%;
+      display:flex;align-items:center;justify-content:center;font-size:1.5em;font-weight:bold;color:#fff;
+      z-index:10;backdrop-filter:blur(1.5px);
     }
-    @media (max-width:520px){
-      .container{max-width:98vw;}
-      .card{max-width:99vw;}
-      .main-btn{width:110px;height:110px;}
-      .profile-pic-big{width:80px;height:80px;}
+    .profile-pic-upload {display:none;}
+    .note{color:#ffb0b0;font-size:0.96em;}
+    .upg-lvl{background:#333;color:#ffd700;border-radius:10px;padding:2px 10px;margin-left:8px;font-size:0.95em;}
+    @media (max-width:600px){
+      .btn-main{width:110px;height:110px;}
+      .tw-btn-main{width:78px;height:78px;}
+      .profile-pic-btn{width:75px;height:75px;}
+      .menu-bar{height:54px;}
     }
   </style>
 </head>
 <body>
-<div class="container">
-
-  <!-- Menüleiste -->
-  <div class="menu-bar">
-    <button class="menu-btn selected" id="menu-btn-main">Home</button>
-    <button class="menu-btn" id="menu-btn-cut" >Cut</button>
-    <button class="menu-btn" id="menu-btn-videos">Videos</button>
-    <button class="menu-btn" id="menu-btn-shop">Shop</button>
-    <button class="menu-btn" id="menu-btn-profile">Profil</button>
-    <button class="menu-btn hidden" id="menu-btn-twitch">Twitch</button>
+<div id="app">
+  <!-- MENÜS -->
+  <div id="menu_start" class="menu active center">
+    <h2>Starte deinen <span style="color:#ff0000">YouTube</span> Kanal!</h2>
+    <input id="yt_name" class="profile-inp" maxlength="20" placeholder="Kanalname">
+    <label>
+      <input id="yt_pic_upload" class="profile-pic-upload" type="file" accept="image/*">
+      <img id="yt_pic_preview" class="profile-pic-btn" src="https://upload.wikimedia.org/wikipedia/commons/9/98/YouTube_Logo_2017.svg" alt="Profilbild">
+    </label>
+    <button class="cut-btn" id="start_game_btn">Los geht's!</button>
   </div>
-
-  <!-- Home/Main -->
-  <div class="card" id="main-menu">
-    <h2><span id="main-channelname"></span></h2>
-    <button class="main-btn" id="yt-btn">
-      <img id="main-profile-pic" src="" alt="Profilbild"/>
-      <span><span id="clips-count"></span><br>Clips</span>
+  <div id="menu_main" class="menu center">
+    <h2><span id="main_yt_name"></span></h2>
+    <button id="main_btn" class="btn-main" title="Klicke für Clips">
+      <img id="main_btn_img" src="https://upload.wikimedia.org/wikipedia/commons/9/98/YouTube_Logo_2017.svg" alt="Profilbild">
     </button>
-    <div style="margin-top:1em;">
-      <span style="font-size:1.2em;">Abonnenten: <b id="subs-count"></b></span>
+    <div class="stats">
+      <span class="stat">Clips: <span id="stat_clips" class="big">0</span></span>
+      <span class="stat">Abos: <span id="stat_abos" class="big">0</span></span>
     </div>
-    <div class="progress-bar" id="main-progress-bar"><div class="progress-bar-inner" id="main-progress"></div></div>
-    <button id="go-cut-btn">Video schneiden ✂️</button>
-    <button class="hidden" id="go-twitch-btn">Zum Twitch-Menü</button>
-    <ul style="margin-top:1em; text-align:left;">
-      <li>Clips: Durch Klicks sammeln</li>
-      <li>Genug Clips? Gehe zum Cut-Menü für Videos</li>
-      <li>Videos generieren Abonnenten</li>
-      <li>Im Shop kannst du upgraden & Helfer kaufen!</li>
-    </ul>
+    <div id="play_btns" style="margin-bottom:12px"></div>
+    <button class="cut-btn" id="to_cut_menu" disabled>Video schneiden</button>
   </div>
-
-  <!-- Cut/Video erstellen -->
-  <div class="card hidden" id="cut-menu">
-    <h2>Video schneiden</h2>
-    <div>
-      <span>Clips: <b id="clips-cut"></b> / <b id="clips-needed"></b></span>
-      <div class="progress-bar"><div class="progress-bar-inner" id="cut-progress"></div></div>
-      <button id="start-cut-btn">Schneiden starten</button>
-      <div id="cutting-block" class="hidden">
-        <br>
-        <b>Schneide Video...</b>
-        <div class="progress-bar"><div class="progress-bar-inner" id="cutting-bar"></div></div>
-      </div>
-      <div id="upload-block" class="hidden">
-        <input id="video-title" placeholder="Titel für Video">
-        <button id="upload-btn">Hochladen</button>
-      </div>
+  <div id="menu_cut" class="menu center cut-menu">
+    <h2>Clips zu Video schneiden</h2>
+    <div class="stats">
+      <span class="stat">Clips: <span id="cut_clips" class="big">0</span></span>
+      <span class="stat">Abos: <span id="cut_abos" class="big">0</span></span>
     </div>
-    <button id="back-main1">Zurück</button>
+    <label>Clips ins Video: <span id="cut_clip_count">10</span></label>
+    <input id="cut_clip_range" type="range" min="10" max="100" step="10" value="10">
+    <input id="cut_video_title" class="profile-inp" maxlength="28" placeholder="Videoname">
+    <button class="cut-btn" id="start_cut_btn">Video schneiden</button>
+    <div id="cut_progress" style="margin:14px 0"></div>
+    <button class="small-btn" onclick="showMenu('menu_main')">Zurück</button>
   </div>
-
-  <!-- Videos -->
-  <div class="card hidden" id="videos-menu">
-    <h2>Alle Videos</h2>
-    <ul class="videos-list" id="videos-list"></ul>
-    <button id="back-main2">Zurück</button>
-  </div>
-
-  <!-- Shop -->
-  <div class="card hidden" id="shop-menu">
+  <div id="menu_shop" class="menu center">
     <h2>Shop</h2>
-    <div id="shop-items"></div>
-    <button id="back-main3">Zurück</button>
+    <ul class="shop-list" id="shop_list"></ul>
+    <button class="small-btn" onclick="showMenu('menu_main')">Zurück</button>
   </div>
-
-  <!-- Twitch Menü -->
-  <div class="card hidden" id="twitch-menu">
-    <h2>Twitch</h2>
-    <button class="main-btn twitch" id="twitch-btn">
-      <img id="twitch-profile-pic" src="" alt="Profilbild"/>
-      <span><span id="twitch-clips-count"></span><br>Clips</span>
-    </button>
-    <div>
-      <span style="font-size:1.2em;">Twitch Abos: <b id="twitch-subs-count"></b></span>
-    </div>
-    <div class="progress-bar twitch" id="twitch-progress-bar"><div class="progress-bar-inner" id="twitch-progress"></div></div>
-    <button id="go-twitch-cut-btn">Stream schneiden ✂️</button>
-    <button id="back-main4">Zurück</button>
+  <div id="menu_videos" class="menu center">
+    <h2>Deine Videos</h2>
+    <ul class="video-list" id="video_list"></ul>
+    <button class="small-btn" onclick="showMenu('menu_main')">Zurück</button>
   </div>
-
-  <!-- Profil -->
-  <div class="card hidden" id="profile-menu">
+  <div id="menu_profile" class="menu center">
     <h2>Profil</h2>
-    <img class="profile-pic-big" id="profile-pic-big" src="" alt="Profilbild"/>
-    <div><b>YouTube:</b> <span id="profile-channelname"></span></div>
-    <div><b>Twitch:</b> <span id="profile-twitchname"></span></div>
-    <div class="input-label">YouTube Kanalname:</div>
-    <input id="edit-channelname" maxlength="18" placeholder="Kanalname">
-    <div class="input-label">YouTube Profilbild:</div>
-    <input type="file" id="edit-profile-pic" accept="image/*">
-    <div class="input-label">Twitch Kanalname:</div>
-    <input id="edit-twitchname" maxlength="18" placeholder="Twitch Name">
-    <div class="input-label">Twitch Profilbild:</div>
-    <input type="file" id="edit-twitch-pic" accept="image/*">
-    <div class="input-label">Account-Code:</div>
-    <div class="code-box" id="account-code"></div>
-    <div class="input-label">Account laden (Code eingeben):</div>
-    <input id="import-code" maxlength="8" placeholder="Code">
-    <button id="import-btn">Account laden</button>
-    <button id="back-main5">Zurück</button>
+    <label>
+      <input id="yt_pic_upload2" class="profile-pic-upload" type="file" accept="image/*">
+      <img id="profile_pic_btn" class="profile-pic-btn" src="https://upload.wikimedia.org/wikipedia/commons/9/98/YouTube_Logo_2017.svg" alt="Profilbild">
+    </label>
+    <input id="profile_name" class="profile-inp" maxlength="20">
+    <h3>Account-Code:</h3>
+    <div class="code-box" id="profile_code"></div>
+    <div style="margin:10px 0"></div>
+    <button class="small-btn" id="logout_btn">Logout</button>
+    <h3>Account importieren:</h3>
+    <input id="import_code" class="profile-inp" maxlength="20" placeholder="Code eingeben">
+    <button class="small-btn" id="import_btn">Account laden</button>
+    <div id="import_note" class="note"></div>
+    <h3>Zum Twitch-Profil</h3>
+    <button class="small-btn" id="to_twitch_profile_btn">Twitch bearbeiten</button>
+    <button class="small-btn" onclick="showMenu('menu_main')">Zurück</button>
   </div>
-
+  <div id="menu_twitch_profile" class="menu center">
+    <h2>Dein Twitch-Kanal</h2>
+    <input id="tw_name" class="profile-inp" maxlength="20" placeholder="Twitch-Name">
+    <label>
+      <input id="tw_pic_upload" class="profile-pic-upload" type="file" accept="image/*">
+      <img id="tw_pic_btn" class="profile-pic-btn" src="https://static.twitchcdn.net/assets/favicon-32-e29e246c157142c94346.png" alt="Twitch-Profilbild">
+    </label>
+    <button class="small-btn" id="save_twitch_profile_btn">Speichern</button>
+    <button class="small-btn" onclick="showMenu('menu_profile')">Zurück</button>
+  </div>
+  <div id="menu_twitch" class="menu center">
+    <h2><span id="main_tw_name"></span></h2>
+    <button id="tw_btn" class="tw-btn-main" title="Klicke für Twitch-Abos">
+      <img id="tw_btn_img" src="https://static.twitchcdn.net/assets/favicon-32-e29e246c157142c94346.png" alt="Profilbild">
+    </button>
+    <div class="stats">
+      <span class="stat">Twitch-Abos: <span id="stat_tw_abos" class="big">0</span></span>
+      <span class="stat">Abos: <span id="stat_abos2" class="big">0</span></span>
+    </div>
+    <div id="play_btns_tw" style="margin-bottom:12px"></div>
+    <button class="small-btn" onclick="showMenu('menu_main')">Zurück</button>
+  </div>
+  <!-- Menüleiste -->
+  <div class="menu-bar" id="menu_bar" style="display:none;">
+    <button id="mb_main" onclick="showMenu('menu_main')"><span>Home</span></button>
+    <button id="mb_cut" onclick="showMenu('menu_cut')"><span>Schneiden</span></button>
+    <button id="mb_videos" onclick="showMenu('menu_videos')"><span>Videos</span></button>
+    <button id="mb_shop" onclick="showMenu('menu_shop')"><span>Shop</span></button>
+    <button id="mb_profile" onclick="showMenu('menu_profile')"><span>Profil</span></button>
+  </div>
 </div>
 <script>
-// ---- Datenstruktur und State ---- //
-const defaultState = {
-  channelName: "MeinChannel",
-  profilePic: '', // base64
-  twitchName: "MeinTwitch",
-  twitchPic: '',
-  code: '', // 8 Zeichen
-  clips: 0,
-  subs: 0,
-  twitchClips: 0,
-  twitchSubs: 0,
-  cutProgress: 0,
-  twitchProgress: 0,
-  videos: [],
-  twitchVideos: [],
-  playButtons: 0,
-  shop: {
-    cutter: {level:0, cost:60},
-    clicker: {level:0, cost:40},
-    streamer: {level:0, cost:100},
-    manager: {level:0, cost:250}
+/* --------- STATE --------- */
+const BASE_STATE = {
+  ytName: "", ytPic: "", twName: "", twPic: "",
+  clips: 0, abos: 0, twAbos: 0, playBtns: 0,
+  upgrades: {clicker:0,cutter:0,streamer:0,manager:0},
+  videos: [], // {title,clips,abos,ts}
+  twUnlocked: false,
+  code: "",
+};
+let state = null;
+
+/* --------- UTILS --------- */
+function genCode() {
+  const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code="";
+  for(let i=0;i<16;i++) code+=chars[Math.floor(Math.random()*chars.length)];
+  return code;
+}
+function save() {
+  if(!state.code) state.code=genCode();
+  localStorage.setItem("yt_clicker_"+state.code, JSON.stringify(state));
+  localStorage.setItem("yt_clicker_lastcode", state.code);
+}
+function load(code) {
+  let raw = localStorage.getItem("yt_clicker_"+code);
+  if(raw){
+    state = JSON.parse(raw);
+    state.code = code;
+    save();
+    return true;
   }
-};
-let state = {};
-const YT_CLIPS_PER_VIDEO = 20;
-const TW_CLIPS_PER_VIDEO = 25;
-const VIDEO_BASE_SUBS = 22; // Grund-Abos pro Video
-const TWITCH_UNLOCK_SUBS = 250;
-const PLAY_BUTTONS = [
-  {subs:100, name:"Silber"},
-  {subs:1000, name:"Gold"},
-  {subs:10000, name:"Diamant"},
-  {subs:100000, name:"Rubin"},
-  {subs:1000000, name:"Edelstein"}
-];
-let playBoost = 1;
-let twitchUnlocked = false;
-let intervalIds = [];
-// ---- LocalStorage ---- //
-function saveState(){
-  localStorage.setItem("ytclicker-state", JSON.stringify(state));
+  return false;
 }
-function loadState(){
-  let s = localStorage.getItem("ytclicker-state");
-  if(s) state = JSON.parse(s);
-  else state = {...defaultState, code: randomCode()};
+function resetAll() {
+  state = JSON.parse(JSON.stringify(BASE_STATE));
+  state.code = genCode();
+  save();
 }
-function setState(s){
-  state = s;
-  saveState(); updateUI();
+function updateProfilePic(img, cb){
+  let file = img.files && img.files[0];
+  if(!file) return;
+  let reader = new FileReader();
+  reader.onload = e => cb(e.target.result);
+  reader.readAsDataURL(file);
 }
-function resetAll(){
-  localStorage.removeItem("ytclicker-state");
-  location.reload();
+function num(n) {
+  if(n>=1e6) return (n/1e6).toFixed(2)+" Mio";
+  if(n>=1e3) return (n/1e3).toFixed(2)+"k";
+  return n|0;
 }
-function randomCode(){
-  return Math.random().toString(36).substr(2,8).toUpperCase();
+function timeFmt(ts) {
+  let d = new Date(ts);
+  return d.toLocaleDateString()+" "+d.toLocaleTimeString().slice(0,5);
 }
-
-// ---- Menü-Wechsel ---- //
-const menus = {
-  main: document.getElementById("main-menu"),
-  cut: document.getElementById("cut-menu"),
-  videos: document.getElementById("videos-menu"),
-  shop: document.getElementById("shop-menu"),
-  profile: document.getElementById("profile-menu"),
-  twitch: document.getElementById("twitch-menu")
-};
-function showMenu(m){
-  for(let k in menus) menus[k].classList.add("hidden");
-  menus[m].classList.remove("hidden");
-  // Menubuttons
-  document.querySelectorAll(".menu-btn").forEach(btn=>btn.classList.remove("selected"));
-  if(m==="main") menuBtnMain.classList.add("selected");
-  if(m==="cut") menuBtnCut.classList.add("selected");
-  if(m==="videos") menuBtnVideos.classList.add("selected");
-  if(m==="shop") menuBtnShop.classList.add("selected");
-  if(m==="profile") menuBtnProfile.classList.add("selected");
-  if(m==="twitch") menuBtnTwitch.classList.add("selected");
-  if(m==="twitch") updateTwitchMenu();
-  if(m==="videos") updateVideosList();
-  if(m==="profile") updateProfileMenu();
+function expPrice(base, lvl) {
+  return Math.round(base * Math.pow(1.45, lvl));
 }
-const menuBtnMain = document.getElementById("menu-btn-main");
-const menuBtnCut = document.getElementById("menu-btn-cut");
-const menuBtnVideos = document.getElementById("menu-btn-videos");
-const menuBtnShop = document.getElementById("menu-btn-shop");
-const menuBtnProfile = document.getElementById("menu-btn-profile");
-const menuBtnTwitch = document.getElementById("menu-btn-twitch");
-menuBtnMain.onclick=()=>showMenu("main");
-menuBtnCut.onclick=()=>showMenu("cut");
-menuBtnVideos.onclick=()=>showMenu("videos");
-menuBtnShop.onclick=()=>showMenu("shop");
-menuBtnProfile.onclick=()=>showMenu("profile");
-menuBtnTwitch.onclick=()=>showMenu("twitch");
-
-// ---- UI-Update ---- //
-function updateUI(){
-  // Main
-  document.getElementById("main-channelname").textContent = state.channelName;
-  document.getElementById("clips-count").textContent = state.clips;
-  document.getElementById("subs-count").textContent = state.subs;
-  document.getElementById("main-profile-pic").src = state.profilePic || "https://i.imgur.com/6VBx3io.png";
-  // Cut
-  document.getElementById("clips-cut").textContent = state.clips;
-  document.getElementById("clips-needed").textContent = YT_CLIPS_PER_VIDEO;
-  // Shop
-  updateShop();
-  // Twitch unlock
-  twitchUnlocked = state.subs >= TWITCH_UNLOCK_SUBS;
-  menuBtnTwitch.classList.toggle("hidden",!twitchUnlocked);
-  document.getElementById("go-twitch-btn").classList.toggle("hidden",!twitchUnlocked);
-  // Play Buttons
-  let playBtns = PLAY_BUTTONS.filter(pb=>state.subs>=pb.subs).length;
-  if(playBtns>state.playButtons){
-    playBoost = 1+0.3*playBtns;
-    state.playButtons = playBtns;
-    saveState();
-  }
-  // Progress
-  let prog = Math.min(state.clips/YT_CLIPS_PER_VIDEO,1)*100;
-  document.getElementById("main-progress").style.width = prog+"%";
+function showMenu(id) {
+  document.querySelectorAll('.menu').forEach(m=>m.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(id==="menu_main"||id==="menu_twitch") updateStats();
+  if(id==="menu_profile") updateProfileMenu();
+  if(id==="menu_cut") updateCutMenu();
+  if(id==="menu_videos") updateVideoList();
+  if(id==="menu_shop") updateShop();
+  if(id==="menu_twitch") updateTwitch();
+  if(id==="menu_twitch_profile") updateTwitchProfile();
+  updateMenuBar(id);
 }
-updateUI();
-
-// ---- Clips Click ---- //
-document.getElementById("yt-btn").onclick = ()=>{
-  state.clips++;
-  saveState(); updateUI();
-};
-
-// ---- Go Cut ---- //
-document.getElementById("go-cut-btn").onclick=()=>showMenu("cut");
-
-// ---- Cut Menü ---- //
-let cutting=false;
-document.getElementById("start-cut-btn").onclick= function(){
-  if(state.clips<YT_CLIPS_PER_VIDEO||cutting)return;
-  cutting=true;
-  this.disabled=true;
-  document.getElementById("cutting-block").classList.remove("hidden");
-  let cutTime = Math.max(3000-(state.shop.cutter.level*400*playBoost),900); // min 900ms
-  let start = Date.now();
-  function tick(){
-    let p = Math.min(1, (Date.now()-start)/cutTime);
-    document.getElementById("cutting-bar").style.width=(p*100)+"%";
-    if(p<1) setTimeout(tick,20);
-    else{
-      document.getElementById("cutting-block").classList.add("hidden");
-      document.getElementById("upload-block").classList.remove("hidden");
-      document.getElementById("upload-btn").onclick = function(){
-        let vt = document.getElementById("video-title").value.trim();
-        if(!vt)vt="Mein Video "+(state.videos.length+1);
-        state.clips -= YT_CLIPS_PER_VIDEO;
-        let abos = Math.floor(VIDEO_BASE_SUBS*(1+(state.videos.length/6))*playBoost*(1-Math.random()/4))+1;
-        // Lose random Abos
-        if(state.videos.length>2 && Math.random()<0.15) abos-=Math.floor(abos/2);
-        state.subs = Math.max(0,state.subs+abos);
-        state.videos.unshift({title:vt,subs:abos,ts:Date.now()});
-        saveState(); updateUI();
-        // Reset
-        document.getElementById("upload-block").classList.add("hidden");
-        document.getElementById("cutting-bar").style.width="0%";
-        document.getElementById("video-title").value="";
-        cutting=false;document.getElementById("start-cut-btn").disabled=false;
-        showMenu("videos");
-      }
-    }
-  } tick();
-};
-
-// ---- Videos Menü ---- //
-function updateVideosList(){
-  const ul = document.getElementById("videos-list");
-  ul.innerHTML = '';
-  if(state.videos.length===0)ul.innerHTML="<li>Noch keine Videos.</li>";
-  state.videos.forEach(v=>{
-    let d=new Date(v.ts); ul.innerHTML += `<li>🎬 <b>${v.title}</b> | +${v.subs} Abos <span style="color:#999;font-size:.87em;">(${d.toLocaleDateString()} ${d.toLocaleTimeString().substr(0,5)})</span></li>`;
+function updateMenuBar(id){
+  let show = ["menu_main","menu_cut","menu_videos","menu_shop","menu_profile"].includes(id);
+  document.getElementById("menu_bar").style.display = show?"flex":"none";
+  ["main","cut","videos","shop","profile"].forEach(x=>{
+    document.getElementById("mb_"+x).className = (id==="menu_"+x)?"active":"";
   });
 }
 
-// ---- Shop ---- //
-const SHOPDATA = [
-  {id:"cutter",label:"Cutter",desc:"Schneidet Videos automatisch",icon:"✂️"},
-  {id:"clicker",label:"Klicker",desc:"Klickt automatisch für Clips",icon:"🖱️"},
-  {id:"streamer",label:"Streamer",desc:"Klickt Twitch automatisch",icon:"🎮"},
-  {id:"manager",label:"Manager",desc:"+5% Speed für alles",icon:"👔"}
+/* --------- START MENU --------- */
+const startBtn = document.getElementById("start_game_btn");
+const ytPicUpload = document.getElementById("yt_pic_upload");
+const ytPicPreview = document.getElementById("yt_pic_preview");
+let tempPic = "";
+ytPicUpload.onchange = ()=>updateProfilePic(ytPicUpload,src=>{
+  ytPicPreview.src = tempPic = src;
+});
+startBtn.onclick = ()=>{
+  let name = document.getElementById("yt_name").value.trim();
+  if(!name) return alert("Bitte Kanalnamen eingeben!");
+  state = JSON.parse(JSON.stringify(BASE_STATE));
+  state.ytName = name;
+  state.ytPic = tempPic || ytPicPreview.src;
+  state.code = genCode();
+  save();
+  showMenu("menu_main");
+  updateStats();
+  updateMenuBar("menu_main");
+  document.getElementById("menu_bar").style.display = "flex";
+};
+ytPicPreview.onclick = ()=>ytPicUpload.click();
+
+/* --------- MAIN MENU --------- */
+function updateStats(){
+  document.getElementById("main_yt_name").textContent = state.ytName;
+  document.getElementById("stat_clips").textContent = num(state.clips);
+  document.getElementById("stat_abos").textContent = num(state.abos);
+  document.getElementById("main_btn_img").src = state.ytPic||ytPicPreview.src;
+  document.getElementById("to_cut_menu").disabled = state.clips<10;
+  updatePlayBtns();
+}
+function updatePlayBtns(){
+  let html = "";
+  for(let i=1;i<=5;i++){
+    let need = [1000,10000,100000,1000000,10000000][i-1];
+    if(state.abos>=need && state.playBtns<i){
+      state.playBtns=i;
+      save();
+    }
+    if(state.playBtns>=i)
+      html += `<span class="play-btn">Play-Button +${i*30}%</span>`;
+  }
+  document.getElementById("play_btns").innerHTML = html;
+}
+document.getElementById("main_btn").onclick = ()=>{
+  let boost = 1+0.3*state.playBtns;
+  let base = 1 + state.upgrades.clicker*3;
+  state.clips += Math.round(base*boost);
+  save();
+  updateStats();
+};
+document.getElementById("to_cut_menu").onclick = ()=>showMenu("menu_cut");
+
+/* --------- CUT MENU --------- */
+const cutRange = document.getElementById("cut_clip_range");
+const cutCountSpan = document.getElementById("cut_clip_count");
+const cutBtn = document.getElementById("start_cut_btn");
+const cutTitle = document.getElementById("cut_video_title");
+const cutProgress = document.getElementById("cut_progress");
+cutRange.oninput = ()=>{cutCountSpan.textContent=cutRange.value;};
+function updateCutMenu(){
+  document.getElementById("cut_clips").textContent = num(state.clips);
+  document.getElementById("cut_abos").textContent = num(state.abos);
+  cutRange.max = Math.min(100, Math.max(10,state.clips));
+  cutRange.value = 10;
+  cutCountSpan.textContent=10;
+  cutBtn.disabled = state.clips<10;
+  cutTitle.value = "";
+  cutProgress.innerHTML = "";
+}
+cutBtn.onclick = ()=>{
+  let c = +cutRange.value;
+  if(state.clips<c) return;
+  let title = cutTitle.value.trim()||"Video "+(state.videos.length+1);
+  let baseSec = Math.max(2, 6-c/25);
+  let lvl = state.upgrades.cutter;
+  let man = state.upgrades.manager;
+  let speed = 1+0.05*man;
+  let t = baseSec/speed/Math.max(1,lvl+1);
+  let done = 0;
+  cutBtn.disabled = true; cutTitle.disabled = true; cutRange.disabled = true;
+  cutProgress.innerHTML = "Schneide Video...";
+  let id = setInterval(()=>{
+    done+=0.2;
+    cutProgress.innerHTML = `Schneide Video... ${Math.round(100*done/t)}%`;
+    if(done>=t){
+      clearInterval(id);
+      cutProgress.innerHTML = "Fertig!";
+      cutBtn.disabled = false; cutTitle.disabled = false; cutRange.disabled = false;
+      state.clips -= c;
+      let abosGained = Math.floor(10+c*3+(state.upgrades.manager*2)+Math.random()*5);
+      // Lose some subs if too many videos, small chance
+      if(Math.random()<0.13 && state.videos.length>9){
+        abosGained -= Math.round(Math.random()*abosGained*0.4);
+        if(abosGained<2) abosGained=2;
+      }
+      state.abos += abosGained;
+      state.videos.push({title,clips:c,abos:abosGained,ts:Date.now()});
+      save();
+      updateStats();
+      setTimeout(()=>{showMenu("menu_videos");},1000);
+    }
+  },200);
+};
+
+/* --------- VIDEO LIST --------- */
+function updateVideoList(){
+  let html = "";
+  if(state.videos.length===0) html='<li class="video-item"><div class="info">Noch kein Video!</div></li>';
+  else for(let v of state.videos.slice().reverse()){
+    html += `<li class="video-item"><div class="info"><div class="title">${v.title}</div>
+      <div class="meta">${v.clips} Clips · +${v.abos} Abos · ${timeFmt(v.ts)}</div></div></li>`;
+  }
+  document.getElementById("video_list").innerHTML = html;
+}
+
+/* --------- SHOP --------- */
+const SHOP_ITEMS = [
+  {id:"clicker",title:"Klicker",desc:"Klickt automatisch für dich.",base:50},
+  {id:"cutter",title:"Cutter",desc:"Schneidet Videos automatisch.",base:175},
+  {id:"streamer",title:"Streamer",desc:"Klickt Twitch automatisch.",base:300},
+  {id:"manager",title:"Manager",desc:"+5% Speed für alles pro Upgrade.",base:400},
 ];
 function updateShop(){
-  let list = '';
-  SHOPDATA.forEach(item=>{
-    let s=state.shop[item.id],nextCost=Math.floor(s.cost*(1.12+0.05*s.level));
-    list+=`
-      <div class="shop-item">
-        <span class="shop-label">${item.icon} ${item.label} <br><span style="font-size:.93em;color:#aaa">${item.desc}</span></span>
-        <span>Lvl. <b>${s.level}</b></span>
-        <span class="shop-cost">${s.cost} Clips</span>
-        <button class="shop-upgrade" id="buy-${item.id}">Kaufen</button>
-      </div>
-    `;
-  });
-  document.getElementById("shop-items").innerHTML = list;
-  // Setze Events
-  SHOPDATA.forEach(item=>{
-    document.getElementById("buy-"+item.id).onclick=()=>{
-      let s=state.shop[item.id];
-      if(state.clips>=s.cost){
-        state.clips-=s.cost;
-        s.level++;
-        // Preis exponential
-        s.cost = Math.floor(s.cost*1.29+12*s.level*playBoost);
-        // Manager-Upgrade Effekt
-        if(item.id==="manager"){
-          // +5% Speed
-          playBoost = 1+0.3*state.playButtons+0.05*s.level;
-        }
-        saveState(); updateUI();
+  let html="";
+  for(let it of SHOP_ITEMS){
+    let lvl = state.upgrades[it.id]||0;
+    let price = expPrice(it.base,lvl);
+    html += `<li class="shop-item">
+      <div class="info"><div class="title">${it.title} <span class="upg-lvl">Lvl ${lvl}</span></div>
+      <div class="desc">${it.desc}</div></div>
+      <div><span class="price">${num(price)} Clips</span>
+      <button onclick="buyShop('${it.id}')" ${state.clips<price?"disabled":""}>Kaufen</button></div></li>`;
+  }
+  document.getElementById("shop_list").innerHTML = html;
+}
+window.buyShop = function(id){
+  let item = SHOP_ITEMS.find(x=>x.id===id);
+  if(!item) return;
+  let lvl = state.upgrades[id]||0;
+  let price = expPrice(item.base,lvl);
+  if(state.clips<price) return;
+  state.clips -= price;
+  state.upgrades[id] = lvl+1;
+  save();
+  updateShop(); updateStats();
+};
+
+/* --------- AUTO CLICKERS --------- */
+setInterval(()=>{
+  if(!state) return;
+  let boost = 1+0.3*state.playBtns;
+  // Clicker
+  if(state.upgrades.clicker>0){
+    state.clips += Math.round((state.upgrades.clicker*boost)/1.9);
+  }
+  // Cutter (auto cut if enough clips, only if not already cutting)
+  if(state.upgrades.cutter>0 && state.clips>=10 && Math.random()<0.04){
+    let c = Math.min(10+state.upgrades.cutter*5, state.clips, 100);
+    let baseSec = Math.max(2, 6-c/25);
+    let man = state.upgrades.manager;
+    let speed = 1+0.05*man;
+    let t = baseSec/speed/Math.max(1,state.upgrades.cutter+1);
+    if(Math.random()<0.10) t*=0.5; // sometimes faster
+    setTimeout(()=>{
+      if(state.clips<c){
+        save();
+        return;
       }
-    }
-  });
-}
-
-// ---- Shop Auto-Aktionen ---- //
-function startIntervals(){
-  intervalIds.forEach(id=>clearInterval(id));
-  intervalIds=[];
-  // Klicker: produziert Clips
-  if(state.shop.clicker.level>0){
-    intervalIds.push(setInterval(()=>{
-      let val = Math.floor(1+state.shop.clicker.level*playBoost);
-      state.clips+=val;
-      saveState(); updateUI();
-    }, 1000));
-  }
-  // Cutter: schneidet automatisch Videos
-  if(state.shop.cutter.level>0){
-    intervalIds.push(setInterval(()=>{
-      if(state.clips>=YT_CLIPS_PER_VIDEO){
-        let cutTime = Math.max(4000-(state.shop.cutter.level*800*playBoost),700);
-        setTimeout(()=>{
-          if(state.clips>=YT_CLIPS_PER_VIDEO){
-            state.clips-=YT_CLIPS_PER_VIDEO;
-            let abos = Math.floor(VIDEO_BASE_SUBS*(1+(state.videos.length/7))*playBoost*(1-Math.random()/4))+1;
-            state.subs = Math.max(0,state.subs+abos);
-            state.videos.unshift({title:"Auto-Video "+(state.videos.length+1),subs:abos,ts:Date.now()});
-            saveState(); updateUI();
-          }
-        },cutTime);
+      let abosGained = Math.floor(10+c*3+(state.upgrades.manager*2)+Math.random()*5);
+      if(Math.random()<0.13 && state.videos.length>9){
+        abosGained -= Math.round(Math.random()*abosGained*0.4);
+        if(abosGained<2) abosGained=2;
       }
-    }, 6000));
+      state.clips -= c;
+      state.abos += abosGained;
+      state.videos.push({title:"Auto-Video "+(state.videos.length+1),clips:c,abos:abosGained,ts:Date.now()});
+      save(); updateStats();
+    }, t*850+100);
   }
-  // Streamer: Twitch-Clips auto
-  if(state.shop.streamer.level>0 && twitchUnlocked){
-    intervalIds.push(setInterval(()=>{
-      let val = Math.floor(1+state.shop.streamer.level*playBoost);
-      state.twitchClips+=val;
-      saveState(); updateTwitchMenu();
-    }, 1100));
+  // Streamer (auto Twitch unlock!)
+  if(state.upgrades.streamer>0 && state.twUnlocked){
+    let add = Math.round((state.upgrades.streamer*boost)/2.2);
+    state.twAbos += add;
+    state.abos += Math.round(add/4);
+    save();
+    updateTwitch();
+  }
+  // Unlock Twitch at 10000 Abos
+  if(!state.twUnlocked && state.abos>=10000){
+    state.twUnlocked=true;save();
+  }
+},1000);
+
+/* --------- TWITCH MENU --------- */
+function updateTwitch(){
+  document.getElementById("main_tw_name").textContent = state.twName||"DeinTwitchKanal";
+  document.getElementById("stat_tw_abos").textContent = num(state.twAbos);
+  document.getElementById("stat_abos2").textContent = num(state.abos);
+  document.getElementById("tw_btn_img").src = state.twPic||"https://static.twitchcdn.net/assets/favicon-32-e29e246c157142c94346.png";
+  let html = "";
+  for(let i=1;i<=state.playBtns;i++){
+    html += `<span class="play-btn">Play-Button +${i*30}%</span>`;
+  }
+  document.getElementById("play_btns_tw").innerHTML = html;
+  // Lock if not unlocked
+  document.getElementById("tw_btn").disabled = !state.twUnlocked;
+  if(!state.twUnlocked){
+    document.getElementById("tw_btn").innerHTML = `<span class="twitch-lock">🔒<br>Ab ${num(10000)} Abos</span>`;
+  }else{
+    document.getElementById("tw_btn").innerHTML = `<img id="tw_btn_img" src="${state.twPic||'https://static.twitchcdn.net/assets/favicon-32-e29e246c157142c94346.png'}">`;
   }
 }
-setInterval(startIntervals, 3000); // Hält Upgrades/Intervalls synchron
-
-// ---- Twitch Menü ---- //
-function updateTwitchMenu(){
-  document.getElementById("twitch-clips-count").textContent = state.twitchClips;
-  document.getElementById("twitch-subs-count").textContent = state.twitchSubs;
-  document.getElementById("twitch-profile-pic").src = state.twitchPic||"https://i.imgur.com/6VBx3io.png";
-  let prog = Math.min(state.twitchClips/TW_CLIPS_PER_VIDEO,1)*100;
-  document.getElementById("twitch-progress").style.width = prog+"%";
-}
-document.getElementById("twitch-btn").onclick = ()=>{
-  state.twitchClips++;
-  saveState(); updateTwitchMenu();
-};
-document.getElementById("go-twitch-btn").onclick=()=>showMenu("twitch");
-document.getElementById("go-twitch-cut-btn").onclick= function(){
-  if(state.twitchClips<TW_CLIPS_PER_VIDEO)return alert("Du brauchst mehr Twitch-Clips!");
-  // Twitch "schneiden"
-  let cutTime = Math.max(3500-(state.shop.streamer.level*450*playBoost),950);
-  let start = Date.now();
-  document.getElementById("go-twitch-cut-btn").disabled=true;
-  function tick(){
-    let p = Math.min(1, (Date.now()-start)/cutTime);
-    document.getElementById("twitch-progress").style.width=(p*100)+"%";
-    if(p<1) setTimeout(tick,22);
-    else{
-      document.getElementById("go-twitch-cut-btn").disabled=false;
-      state.twitchClips -= TW_CLIPS_PER_VIDEO;
-      let abos = Math.floor(19*(1+state.twitchVideos.length/5)*playBoost*(1-Math.random()/5))+1;
-      state.twitchSubs = Math.max(0,state.twitchSubs+abos);
-      state.twitchVideos.unshift({title:"Twitch-Stream "+(state.twitchVideos.length+1),subs:abos,ts:Date.now()});
-      saveState(); updateTwitchMenu();
-      alert("Twitch-Stream hochgeladen! +" + abos + " Twitch-Subs");
-    }
-  } tick();
-};
-
-// ---- Play-Buttons ---- //
-// Play-Buttons werden automatisch als Boost aktiviert, UI siehe updateUI()
-
-// ---- Profil Menü ---- //
-function updateProfileMenu(){
-  document.getElementById("profile-pic-big").src = state.profilePic||"https://i.imgur.com/6VBx3io.png";
-  document.getElementById("profile-channelname").textContent = state.channelName;
-  document.getElementById("profile-twitchname").textContent = state.twitchName;
-  document.getElementById("edit-channelname").value = state.channelName;
-  document.getElementById("edit-twitchname").value = state.twitchName;
-  document.getElementById("account-code").textContent = state.code;
-}
-document.getElementById("edit-channelname").oninput = function(){
-  state.channelName=this.value.substr(0,18);
-  saveState(); updateUI();
-};
-document.getElementById("edit-twitchname").oninput = function(){
-  state.twitchName=this.value.substr(0,18);
-  saveState(); updateProfileMenu();
-};
-// Profilbild-Import
-function fileToBase64(file,cb){
-  const r = new FileReader();
-  r.onload = ()=>cb(r.result);
-  r.readAsDataURL(file);
-}
-document.getElementById("edit-profile-pic").onchange = function(e){
-  let f = e.target.files[0]; if(!f)return;
-  fileToBase64(f,base64=>{
-    state.profilePic=base64; saveState(); updateUI(); updateProfileMenu();
-  });
-};
-document.getElementById("edit-twitch-pic").onchange = function(e){
-  let f = e.target.files[0]; if(!f)return;
-  fileToBase64(f,base64=>{
-    state.twitchPic=base64; saveState(); updateTwitchMenu(); updateProfileMenu();
-  });
-};
-// Account-Code Import/Export
-document.getElementById("import-btn").onclick = function(){
-  let code = document.getElementById("import-code").value.trim().toUpperCase();
-  if(!code)return;
-  let data = localStorage.getItem("ytclicker-"+code);
-  if(!data) return alert("Kein Account mit Code gefunden!");
-  setState(JSON.parse(data));
-  updateUI(); updateProfileMenu();
-  alert("Account geladen!");
-};
-function saveAccountCode(){
-  localStorage.setItem("ytclicker-"+state.code, JSON.stringify(state));
-}
-setInterval(saveAccountCode, 3000); // alle 3s
-
-// ---- Back Buttons ---- //
-document.getElementById("back-main1").onclick=()=>showMenu("main");
-document.getElementById("back-main2").onclick=()=>showMenu("main");
-document.getElementById("back-main3").onclick=()=>showMenu("main");
-document.getElementById("back-main4").onclick=()=>showMenu("main");
-document.getElementById("back-main5").onclick=()=>showMenu("main");
-
-// ---- Erstinitialisierung ---- //
-loadState(); updateUI(); updateProfileMenu(); startIntervals();
-
-</script>
-</body>
-</html>
+document.getElementById("tw_btn").onclick = ()=>{
+  if(!state.twUnlocked) return;
+  let boost = 1+0.3*state.playBtns;
+  let base = 2 + state.upgrades.streamer*2;
+  state.twAbos += Math.round
