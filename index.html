@@ -228,10 +228,11 @@ window.addEventListener("DOMContentLoaded",()=>{
     let multi=1+0.05*state.shop[3]+(state.play>0?0.3:0);
     let plus=1+state.shop[2];
     state.tws+=Math.round(plus*multi);
-    save();updateAll();
     // Streams geben extra Twitch Abos
     let abplus=Math.floor(Math.random()*20*multi)+5+state.shop[2]*3;
     state.twsubs+=abplus;
+    // NEU: Twitch-Abos zu den "normalen" (subs) dazu zählen!
+    state.subs += abplus;
     save();updateAll();
   }
   // Cut
@@ -298,6 +299,8 @@ window.addEventListener("DOMContentLoaded",()=>{
       let abplus=Math.floor(Math.random()*20*multi)+5+state.shop[2]*3;
       abplus = Math.floor(abplus);
       state.twsubs+=abplus;
+      // NEU: Twitch-Abos zu den "normalen" (subs) dazu zählen!
+      state.subs += abplus;
     }
     // Lose Abos
     if(state.vids.length>5&&Math.random()<0.1){
@@ -366,8 +369,8 @@ function updateAll(){
   document.getElementById("y-img").src=defimg;
   document.getElementById("p-code").textContent=state.code;
   document.getElementById("clips").textContent = Math.floor(state.clips);
-  // Summe aller Abos
-  let allsubs = Math.floor(state.subs)+Math.floor(state.twsubs);
+  // Summe aller Abos (YT + Twitch)
+  let allsubs = Math.floor(state.subs); // Jetzt sind Twitch-Abos schon in subs enthalten!
   document.getElementById("subs").textContent = allsubs;
   document.getElementById("cclips").textContent = Math.floor(state.clips);
   document.getElementById("tw-name").value=state.twname||"";
