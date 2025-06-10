@@ -14,38 +14,135 @@
       --white:#fff;
       --bl:rgba(0,0,0,0.7);
       --radius:1em;
+      --btn-shadow:0 4px 18px #0007,0 1.5px 8px #e5393533;
+      --btn-grad:linear-gradient(135deg,#e53935 0%,#ff6f54 100%);
+      --btn-grad-tw:linear-gradient(135deg,#6441a5 0%,#a084e8 100%);
+      --btn-grad-gold:linear-gradient(135deg,gold 0%,#fff7c0 100%);
     }
     html,body{height:100%;margin:0;padding:0;background:var(--bg);color:var(--white);font-family:sans-serif;}
     body{display:flex;flex-direction:column;min-height:100vh;}
     header{padding:1em 0;text-align:center;font-size:2em;letter-spacing:.05em;}
     nav{display:flex;justify-content:center;gap:.5em;margin-bottom:1em;}
-    nav button{background:var(--gray);border:0;color:var(--white);padding:.6em 1.2em;border-radius:.7em;font-weight:700;cursor:pointer;transition:.2s;box-shadow:0 2px 6px #0003;}
-    nav button.active,nav button:hover{background:var(--red);}
+    nav button{
+      background:var(--gray);
+      border:0;
+      color:var(--white);
+      padding:.7em 1.5em;
+      border-radius:1.2em;
+      font-weight:700;
+      font-size:1.14em;
+      cursor:pointer;
+      transition:.2s;
+      box-shadow:var(--btn-shadow);
+      letter-spacing:.04em;
+      outline:none;
+      border:2px solid transparent;
+      position:relative;
+      overflow:hidden;
+      z-index:1;
+    }
+    nav button.active,nav button:hover{
+      background:var(--btn-grad);
+      color:var(--white);
+      border-color:#e53935cc;
+      transform:translateY(-1px) scale(1.04);
+      box-shadow:0 6px 22px #e5393540,0 1.5px 8px #fff4;
+    }
+    nav button.twitch-btn.active,nav button.twitch-btn:hover{
+      background:var(--btn-grad-tw)!important;
+      border-color:#6441a5cc;
+      color:#fff;
+    }
     main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:400px;}
     .menu{display:none;max-width:98vw;width:410px;}
     .menu.active{display:block;}
     .center{display:flex;flex-direction:column;align-items:center;}
-    .big-btn{border:0;width:180px;height:180px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--gray);box-shadow:0 4px 24px #0005;cursor:pointer;margin:1.4em 0 1em 0;transition:.1s;position:relative;}
-    .big-btn img{width:100%;height:100%;object-fit:cover;}
-    .big-btn::after{content:"";display:block;position:absolute;inset:0;border-radius:50%;box-shadow:0 0 16px #fff6;pointer-events:none;}
-    .stat{font-size:1.2em;margin-bottom:.5em;word-break:break-all;}
+    .big-btn{
+      border:0;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      overflow:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:var(--btn-grad);
+      box-shadow:0 8px 32px #e5393540,0 2px 12px #fff4;
+      cursor:pointer;
+      margin:1.4em 0 1em 0;
+      transition:.1s;
+      position:relative;
+      outline:none;
+      border:3px solid #fff2;
+    }
+    .twitch-btn.big-btn{
+      background:var(--btn-grad-tw)!important;
+      color:#fff;
+      border-color:#6441a5cc;
+    }
+    .play-btn.big-btn{
+      background:var(--btn-grad-gold)!important;
+      color:#333;
+      border-color:gold;
+      font-weight:900;
+    }
+    .big-btn img{width:75%;height:75%;object-fit:cover;}
+    .big-btn::after{
+      content:"";
+      display:block;
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      box-shadow:0 0 16px #fff6;
+      pointer-events:none;
+    }
+    .stat{font-size:1.24em;margin-bottom:.5em;word-break:break-all;}
     .shop{display:flex;flex-direction:column;gap:.7em;margin:1.2em 0;}
     .shop-item{display:flex;justify-content:space-between;align-items:center;background:var(--gray);padding:1em;border-radius:var(--radius);}
     .shop-item span{font-weight:700;}
-    .shop-item button{background:var(--red);color:var(--white);border:0;padding:.4em 1em;border-radius:.7em;font-size:1em;cursor:pointer;}
-    .input-img{width:80px;height:80px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 1em auto;}
-    input[type="file"]{display:none;}
-    .profile label{display:inline-block;background:var(--gray);padding:.4em 1em;border-radius:.7em;cursor:pointer;}
-    .profile input[type="text"]{width:90%;max-width:270px;padding:.4em .7em;border-radius:.7em;border:1px solid #555;background:var(--bg);color:var(--white);margin-bottom:.6em;}
+    .shop-item button{
+      background:var(--btn-grad);
+      color:var(--white);
+      border:0;
+      padding:.5em 1.2em;
+      border-radius:.9em;
+      font-size:1.07em;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:var(--btn-shadow);
+      transition:.15s;
+      outline:none;
+      border:2px solid transparent;
+    }
+    .shop-item button:hover,.shop-item button:focus{
+      background:var(--btn-grad-gold);
+      color:#333;
+      border-color:gold;
+      transform:scale(1.05);
+    }
+    input[type="text"],input[type="number"]{
+      width:90%;
+      max-width:270px;
+      padding:.5em .7em;
+      border-radius:.7em;
+      border:1.7px solid #555;
+      background:var(--bg);
+      color:var(--white);
+      margin-bottom:.6em;
+      font-size:1.08em;
+      outline:none;
+      box-shadow:0 2px 8px #0001;
+      transition:.13s;
+    }
+    input[type="text"]:focus,input[type="number"]:focus{border-color:var(--red);}
+    .profile label{display:none;}
     .profile .code{word-break:break-all;font-size:1em;background:var(--gray);padding:.5em 1em;border-radius:var(--radius);margin-top:.5em;}
     .profile .load{margin-top:.8em;}
     .vid-list{max-height:160px;overflow:auto;border-radius:8px;background:var(--gray);padding:.7em .7em 0 .7em;margin:1em 0 0 0;}
     .vid-list span{display:block;border-bottom:1px solid #333;padding:.2em 0;}
     .flex-row{display:flex;flex-direction:row;align-items:center;gap:.8em;}
-    .twitch-btn{background:var(--tw)!important;}
-    .play-btn{background:gold;color:#333;font-weight:900;}
     .boost{color:gold;}
-    .note{color:#ccc;font-size:.95em;}
+    .note{color:#ccc;font-size:.97em;}
     @media (max-width:600px) {
       .menu{width:98vw;}
       .big-btn{width:120px;height:120px;}
@@ -61,7 +158,7 @@
   <button id="nav-c">Videos</button>
   <button id="nav-s">Shop</button>
   <button id="nav-p">Profil</button>
-  <button id="nav-t" style="display:none">Twitch</button>
+  <button id="nav-t" style="display:none" class="twitch-btn">Twitch</button>
 </nav>
 <main>
   <!-- YouTube Menü -->
@@ -95,8 +192,7 @@
   <!-- Profil -->
   <div class="menu profile" id="m-p">
     <div style="text-align:center;">
-      <img class="input-img" id="p-img" src="https://img.icons8.com/color/452/youtube-play.png" alt="Profil">
-      <label for="img-upload">Profilbild auswählen<input type="file" accept="image/*" id="img-upload"></label>
+      <!-- Profilbild entfernt -->
     </div>
     <input type="text" id="p-name" placeholder="YouTube-Kanalname" maxlength="20">
     <div style="margin:.7em 0 1em 0"><strong>Profilcode:</strong><br><span class="code" id="p-code"></span></div>
@@ -106,7 +202,7 @@
     </div>
     <div style="margin-top:1em;">
       <input type="text" id="tw-name" placeholder="Twitch-Kanalname" maxlength="20" style="display:none;">
-      <label for="tw-upload" id="tw-lab" style="display:none;">Twitch-Profilbild<input type="file" accept="image/*" id="tw-upload"></label>
+      <!-- Twitch-Profilbild entfernt -->
     </div>
   </div>
   <!-- Twitch Menü -->
@@ -137,6 +233,7 @@ let state={
 };
 let cutClips=0,cutting=false,cutDur=0,cutName="";
 function save(){
+  // Kanalname wird IMMER gespeichert, sobald eingegeben
   localStorage.setItem("ytclicker_"+state.code,JSON.stringify(state));
   localStorage.setItem("ytclicker_last",state.code);
 }
@@ -166,21 +263,13 @@ window.addEventListener("DOMContentLoaded",()=>{
       if(m)m.classList.add("active");
     };
   });
-  // Profil
-  document.getElementById("img-upload").onchange=e=>{
-    let r=new FileReader();
-    r.onload=ev=>{state.img=ev.target.result;save();updateAll();}
-    r.readAsDataURL(e.target.files[0]);
-  };
+  // Profil (nur Kanalname)
   document.getElementById("p-name").oninput=e=>{
-    state.name=e.target.value;save();updateAll();
+    state.name=e.target.value;
+    save(); // Speichere sofort bei Eingabe!
+    updateAll();
   };
-  // Twitch Bild+Name
-  document.getElementById("tw-upload").onchange=e=>{
-    let r=new FileReader();
-    r.onload=ev=>{state.twimg=ev.target.result;save();updateAll();}
-    r.readAsDataURL(e.target.files[0]);
-  }
+  // Twitch Name
   document.getElementById("tw-name").oninput=e=>{
     state.twname=e.target.value;save();updateAll();
   }
@@ -245,7 +334,7 @@ window.addEventListener("DOMContentLoaded",()=>{
   setInterval(()=>{
     // Klicker
     let multi=1+0.05*state.shop[3]+(state.play>0?0.3:0);
-    state.clips+=state.shop[1]*multi;
+    state.clips+=Math.round(state.shop[1]*multi);
     // Cutter (Video auto schneiden)
     if(state.shop[0]>0&&!cutting&&state.clips>=5){
       let cnt=Math.min(10+state.shop[0]*2,state.clips);
@@ -264,7 +353,7 @@ window.addEventListener("DOMContentLoaded",()=>{
     }
     // Streamer
     if(state.twon&&state.shop[2]>0){
-      state.tws+=state.shop[2]*multi;
+      state.tws+=Math.round(state.shop[2]*multi);
       let abplus=Math.floor(Math.random()*20*multi)+5+state.shop[2]*3;
       state.twsubs+=abplus;
     }
@@ -281,11 +370,10 @@ window.addEventListener("DOMContentLoaded",()=>{
       }
     }
     // Twitch Menü freischalten
-    if(!state.twon&&state.subs>=10000){
+    if(!state.twon&&state.subs>=50000){
       state.twon=true;
       document.getElementById("nav-t").style.display="";
       document.getElementById("tw-name").style.display="";
-      document.getElementById("tw-lab").style.display="";
       save();
     }
     save();updateAll();
@@ -319,23 +407,24 @@ function updateShop(){
 function updateAll(){
   // Profil
   document.getElementById("p-name").value=state.name;
-  document.getElementById("p-img").src=state.img||defimg;
-  document.getElementById("y-img").src=state.img||defimg;
+  // Profilbild entfernt
+  document.getElementById("y-img").src=defimg;
   document.getElementById("p-code").textContent=state.code;
-  document.getElementById("clips").textContent=state.clips;
-  document.getElementById("subs").textContent=state.subs;
-  document.getElementById("cclips").textContent=state.clips;
+  document.getElementById("clips").textContent=Math.floor(state.clips);
+  document.getElementById("subs").textContent=Math.floor(state.subs);
+  document.getElementById("cclips").textContent=Math.floor(state.clips);
   document.getElementById("tw-name").value=state.twname||"";
-  document.getElementById("tw-img").src=state.twimg||deftw;
-  document.getElementById("tws").textContent=state.tws||0;
-  document.getElementById("tsubs").textContent=state.twsubs||0;
+  document.getElementById("tw-img").src=deftw;
+  document.getElementById("tws").textContent=Math.floor(state.tws||0);
+  document.getElementById("tsubs").textContent=Math.floor(state.twsubs||0);
   document.getElementById("playb").style.display=state.play>0?"":"none";
   document.getElementById("playbt").style.display=state.play>0?"":"none";
   // Video-Liste
   let v=document.getElementById("vids");v.innerHTML="";
   state.vids.slice(-15).reverse().forEach(vid=>{
+    let c = Math.floor(vid.c), a = Math.floor(vid.a);
     let e=document.createElement("span");
-    e.textContent=vid.n+" ("+vid.c+" Clips, +"+vid.a+" Abos)";
+    e.textContent=vid.n+" ("+c+" Clips, +"+a+" Abos)";
     v.appendChild(e);
   });
   // Shop
