@@ -1,87 +1,74 @@
 body {
-  margin: 0;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: #181818;
+  font-family: Arial, sans-serif;
+  background: #111;
   color: #fff;
+  margin: 0; padding: 0;
 }
 .menu {
+  max-width: 400px;
+  margin: 40px auto;
+  background: #222;
+  padding: 20px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px #000a;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 100vh;
 }
-.hidden {
-  display: none !important;
-}
-input[type="text"], input[type="file"] {
-  margin: 8px;
-  padding: 8px;
-  border-radius: 8px;
+.big-btn {
+  width: 160px;
+  height: 160px;
   border: none;
-  font-size: 16px;
+  border-radius: 50%;
+  margin: 24px 0;
+  background: #fff;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+}
+#profile-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  justify-content: space-between;
+}
+.profile-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+}
+label, input, button {
+  margin: 7px 0;
+  font-size: 1rem;
 }
 button {
-  margin: 8px;
-  padding: 14px 28px;
-  border: none;
-  border-radius: 40px;
-  background: #e62117;
+  background: #cc0000;
   color: #fff;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-button:hover { background: #b31210; }
-.main-btn {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  border: 5px solid #fff;
-  background-size: cover !important;
-  background-position: center;
-  display: block;
-  margin: 32px auto 16px;
-}
-.profile-pic {
-  width: 64px;
-  height: 64px;
-  border-radius: 32px;
-  background: #444;
-  margin: 8px auto;
-  background-size: cover !important;
-  background-position: center;
-}
-#profile-pic-big {
-  width: 120px;
-  height: 120px;
-  border-radius: 60px;
-}
-header {
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  background: #222;
-  padding: 8px 0;
-}
-header span, header button { margin: 0 4px; }
-#user-profile {
-  display: flex;
-  align-items: center;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 7px;
   cursor: pointer;
 }
-#mini-profile-pic {
-  width: 40px; height: 40px;
-  border-radius: 20px;
-  margin-right: 8px;
-  background: #333;
-  background-size: cover !important;
-  background-position: center;
+button:hover {
+  background: #ff3333;
+}
+input[type="file"] {
+  color: #fff;
+}
+#shop-list > div {
+  margin-bottom: 12px;
 }
 @media (max-width: 600px) {
-  .main-btn { width: 120px; height: 120px; }
-  #profile-pic-big { width: 80px; height: 80px; }
-  header { font-size: 12px; }
+  .menu {
+    max-width: 98vw;
+    padding: 10vw 5vw;
+  }
+  .big-btn {
+    width: 110px;
+    height: 110px;
+  }
 }
