@@ -14,36 +14,34 @@
       --white:#fff;
       --bl:rgba(0,0,0,0.7);
       --radius:1em;
-      --btn-grad: linear-gradient(90deg, #e53935 0%, #ff6f00 100%);
-      --btn-shadow: 0 2px 12px #0009;
+      --accent:#3ddc97;
+      --button-shadow: 0 3px 14px #0007;
     }
     html,body{height:100%;margin:0;padding:0;background:var(--bg);color:var(--white);font-family:sans-serif;}
     body{display:flex;flex-direction:column;min-height:100vh;}
     header{padding:1em 0;text-align:center;font-size:2em;letter-spacing:.05em;}
     nav{display:flex;justify-content:center;gap:.5em;margin-bottom:1em;}
-    nav button{background:var(--gray);border:0;color:var(--white);padding:.6em 1.2em;border-radius:.7em;font-weight:700;cursor:pointer;transition:.2s;box-shadow:0 2px 6px #0003;}
+    nav button{background:var(--gray);border:0;color:var(--white);padding:.6em 1.2em;border-radius:.7em;font-weight:700;cursor:pointer;transition:.2s;box-shadow:var(--button-shadow);}
     nav button.active,nav button:hover{background:var(--red);}
     main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:400px;}
     .menu{display:none;max-width:98vw;width:410px;}
     .menu.active{display:block;}
     .center{display:flex;flex-direction:column;align-items:center;}
-    .big-btn{border:0;width:180px;height:180px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--gray);box-shadow:0 4px 24px #0005;cursor:pointer;margin:1.4em 0 1em 0;transition:.1s;position:relative;}
-    .big-btn img{width:100%;height:100%;object-fit:cover;}
+    .big-btn{border:0;width:180px;height:180px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--gray);box-shadow:var(--button-shadow);cursor:pointer;margin:1.4em 0 1em 0;transition:.1s;position:relative;}
+    .big-btn img{width:90px;height:90px;object-fit:cover;}
     .big-btn::after{content:"";display:block;position:absolute;inset:0;border-radius:50%;box-shadow:0 0 16px #fff6;pointer-events:none;}
     .stat{font-size:1.2em;margin-bottom:.5em;word-break:break-all;}
     .shop{display:flex;flex-direction:column;gap:.7em;margin:1.2em 0;}
     .shop-item{display:flex;justify-content:space-between;align-items:center;background:var(--gray);padding:1em;border-radius:var(--radius);}
     .shop-item span{font-weight:700;}
-    .shop-item button{background:var(--btn-grad);color:var(--white);border:0;padding:.4em 1em;border-radius:.7em;font-size:1em;cursor:pointer;box-shadow:var(--btn-shadow);font-weight:bold;transition:.2s;}
-    .shop-item button:hover{filter:brightness(1.1);}
+    .shop-item button{background:var(--red);color:var(--white);border:0;padding:.4em 1em;border-radius:.7em;font-size:1em;cursor:pointer;box-shadow:var(--button-shadow);transition:background 0.2s;}
+    .shop-item button:hover{background:var(--accent);}
     .input-img{display:none;}
     input[type="file"]{display:none;}
     .profile label{display:none;}
     .profile input[type="text"]{width:90%;max-width:270px;padding:.4em .7em;border-radius:.7em;border:1px solid #555;background:var(--bg);color:var(--white);margin-bottom:.6em;}
     .profile .code{word-break:break-all;font-size:1em;background:var(--gray);padding:.5em 1em;border-radius:var(--radius);margin-top:.5em;}
     .profile .load{margin-top:.8em;}
-    .profile .reset-btn{background:linear-gradient(90deg,#222 0%,#e53935 100%);color:#fff;padding:.5em 1.2em;border-radius:.7em;border:0;font-size:1em;cursor:pointer;box-shadow:var(--btn-shadow);margin-top:1.3em;transition:.2s;}
-    .profile .reset-btn:hover{filter:brightness(1.15);}
     .vid-list{max-height:160px;overflow:auto;border-radius:8px;background:var(--gray);padding:.7em .7em 0 .7em;margin:1em 0 0 0;}
     .vid-list span{display:block;border-bottom:1px solid #333;padding:.2em 0;}
     .flex-row{display:flex;flex-direction:row;align-items:center;gap:.8em;}
@@ -51,29 +49,16 @@
     .play-btn{background:gold;color:#333;font-weight:900;}
     .boost{color:gold;}
     .note{color:#ccc;font-size:.95em;}
-    .nice-btn, .menu button:not(.big-btn):not(.reset-btn), .profile .load button, #to-cut, #do-cut, #upload, #btn-load  {
-      background: var(--btn-grad)!important;
-      color: #fff!important;
-      border: 0!important;
-      border-radius: .8em!important;
-      font-size: 1.1em!important;
-      font-weight: bold!important;
-      padding: .6em 1.5em!important;
-      margin: .7em 0 .3em 0!important;
-      box-shadow: var(--btn-shadow)!important;
-      transition: .15s;
-      cursor:pointer;
-      outline: none;
-      letter-spacing:.03em;
-    }
-    .nice-btn:disabled, .menu button:disabled {filter: grayscale(0.7) brightness(0.8)!important;cursor:not-allowed;}
-    #to-cut, #do-cut, #upload, #btn-load {margin-bottom:.35em;}
+    .nice-btn{background:var(--accent);color:var(--bg);border:0;padding:.6em 1.2em;border-radius:.7em;font-weight:700;cursor:pointer;box-shadow:var(--button-shadow);transition:background 0.2s;}
+    .nice-btn:disabled{background:#bbb;color:#888;cursor:not-allowed;}
+    .nice-btn:hover:not(:disabled){background:#38c77e;}
+    .reset-btn{background:var(--red);color:var(--white);border:0;padding:.5em 1.2em;border-radius:.7em;font-weight:700;cursor:pointer;box-shadow:var(--button-shadow);margin-top:1em;transition:background 0.2s;}
+    .reset-btn:hover{background:#b71c1c;}
     @media (max-width:600px) {
       .menu{width:98vw;}
       .big-btn{width:120px;height:120px;}
       header{font-size:1.15em;}
       .vid-list{max-height:90px;}
-      .profile .reset-btn{font-size:.95em;}
     }
   </style>
 </head>
@@ -93,7 +78,7 @@
       <button class="big-btn" id="y-btn" title="Clips produzieren"><img src="https://img.icons8.com/color/452/youtube-play.png" id="y-img" alt="Profil"></button>
       <div class="stat">Clips: <span id="clips">0</span></div>
       <div class="stat">Abos: <span id="subs">0</span> <span id="playb" style="display:none" class="boost">+30% Boost</span></div>
-      <button id="to-cut" class="nice-btn">Clips schneiden</button>
+      <button id="to-cut" class="nice-btn" style="margin:.8em 0 .5em 0">Clips schneiden</button>
       <div class="note">Sammle Clips und schneide daraus Videos, um Abonnenten zu gewinnen!</div>
     </div>
   </div>
@@ -118,14 +103,15 @@
   <!-- Profil -->
   <div class="menu profile" id="m-p">
     <div style="text-align:center;">
-      <input type="text" id="p-name" placeholder="YouTube-Kanalname" maxlength="20">
+      <!-- Profilbild entfernt -->
     </div>
+    <input type="text" id="p-name" placeholder="YouTube-Kanalname" maxlength="20">
     <div style="margin:.7em 0 1em 0"><strong>Profilcode:</strong><br><span class="code" id="p-code"></span></div>
-    <div class="load flex-row">
+    <div class="load">
       <input type="text" id="load-code" placeholder="Code eingeben & laden" maxlength="32">
       <button id="btn-load" class="nice-btn">Laden</button>
     </div>
-    <button class="reset-btn" id="reset-btn" title="Spiel zurücksetzen">Spiel zurücksetzen</button>
+    <button id="reset-btn" class="reset-btn">Spiel zurücksetzen</button>
     <div style="margin-top:1em;">
       <input type="text" id="tw-name" placeholder="Twitch-Kanalname" maxlength="20" style="display:none;">
       <label for="tw-upload" id="tw-lab" style="display:none;">Twitch-Profilbild<input type="file" accept="image/*" id="tw-upload"></label>
@@ -153,18 +139,12 @@ const shopItems=[
   {n:"Streamer",desc:"Streams automatisch",base:200,up:0,cost:200},
   {n:"Manager",desc:"+5% Speed auf alles",base:500,up:0,cost:500}
 ];
-// Standard-State (ohne Bilddaten)
-function getDefaultState() {
-  return {
-    name: "", img: defimg, clips: 0, subs: 0, vids: [], tws: 0, twsubs: 0, code: randCode(), twname: "",
-    twimg: deftw, shop: [0, 0, 0, 0], play: 0, twon: false
-  };
-}
-let state = getDefaultState();
+let state={
+  name:"",img:defimg,clips:0,subs:0,vids:[],tws:0,twsubs:0,code:randCode(),twname:"",twimg:deftw,
+  shop:[0,0,0,0],play:0,twon:false
+};
 let cutClips=0,cutting=false,cutDur=0,cutName="";
-
 function save(){
-  // Nur Kanalname speichern, kein Profilbild
   localStorage.setItem("ytclicker_"+state.code,JSON.stringify(state));
   localStorage.setItem("ytclicker_last",state.code);
 }
@@ -180,15 +160,31 @@ function load(c){
 function randCode(){
   return Math.random().toString(36).substr(2,8)+Date.now().toString(36).substr(-8);
 }
-// Reset-Button Handler
-function resetGame(){
-  if(confirm("Willst du das Spiel wirklich zurücksetzen? Alle Fortschritte gehen verloren!")) {
-    let code=randCode();
-    state = getDefaultState();
-    state.code = code;
+function resetGame() {
+  let confirmReset = confirm("Willst du das Spiel wirklich zurücksetzen? Alles geht verloren!");
+  if(confirmReset) {
+    let newCode = randCode();
+    state = {
+      name:"",
+      img:defimg,
+      clips:0,
+      subs:0,
+      vids:[],
+      tws:0,
+      twsubs:0,
+      code:newCode,
+      twname:"",
+      twimg:deftw,
+      shop:[0,0,0,0],
+      play:0,
+      twon:false
+    };
     save();
     updateAll();
-    alert("Das Spiel wurde zurückgesetzt!");
+    // Twitch-Tab verstecken, falls noch nicht frei
+    document.getElementById("nav-t").style.display="none";
+    document.getElementById("tw-name").style.display="none";
+    document.getElementById("tw-lab").style.display="none";
   }
 }
 // Init
@@ -205,29 +201,26 @@ window.addEventListener("DOMContentLoaded",()=>{
       if(m)m.classList.add("active");
     };
   });
-  // Profil (nur Kanalname)
+  // Profil-Name (speichert sofort!)
   document.getElementById("p-name").oninput=e=>{
-    state.name=e.target.value;
-    save();
-    updateAll();
+    state.name=e.target.value;save();updateAll();
   };
   // Twitch Name
   document.getElementById("tw-name").oninput=e=>{
     state.twname=e.target.value;save();updateAll();
   }
-  // Profilcode
+  // Profilcode laden
   document.getElementById("btn-load").onclick=()=>{
     let v=document.getElementById("load-code").value.trim();
     if(v)load(v);
   }
   // Reset-Button
-  document.getElementById("reset-btn").onclick = resetGame;
+  document.getElementById("reset-btn").onclick=resetGame;
   // YT Button
   document.getElementById("y-btn").onclick=()=>{
     let multi=1+0.05*state.shop[3]+(state.play>0?0.3:0);
     let plus=1+state.shop[1];
     state.clips+=Math.round(plus*multi);
-    state.clips=Math.floor(state.clips); // Runden
     save();updateAll();
   }
   // Twitch Button
@@ -235,11 +228,10 @@ window.addEventListener("DOMContentLoaded",()=>{
     let multi=1+0.05*state.shop[3]+(state.play>0?0.3:0);
     let plus=1+state.shop[2];
     state.tws+=Math.round(plus*multi);
-    state.tws=Math.floor(state.tws);
     save();updateAll();
     // Streams geben extra Twitch Abos
     let abplus=Math.floor(Math.random()*20*multi)+5+state.shop[2]*3;
-    state.twsubs+=Math.floor(abplus);
+    state.twsubs+=abplus;
     save();updateAll();
   }
   // Cut
@@ -249,6 +241,7 @@ window.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("do-cut").onclick=()=>{
     if(cutting)return;
     let cnt=parseInt(document.getElementById("cut-cnt").value)||5;
+    cnt = Math.floor(cnt);
     if(state.clips<cnt||cnt<5)return;
     cutDur=Math.max(2500-Math.min(state.shop[0]*350,2200),600)+(cnt-5)*250;
     if(state.shop[0]>0)cutDur-=state.shop[0]*150;
@@ -260,17 +253,15 @@ window.addEventListener("DOMContentLoaded",()=>{
       document.getElementById("upload").disabled=false;
       document.getElementById("cut-prog").textContent="Fertig! Jetzt hochladen.";
     },cutDur);
-    state.clips-=cnt;state.clips=Math.floor(state.clips);
-    save();updateAll();
+    state.clips-=cnt;save();updateAll();
   };
   // Upload
   document.getElementById("upload").onclick=()=>{
     if(!cutName)return;
     let abG=10+Math.floor(Math.random()*cutClips*2)+(cutClips*state.shop[0]);
     if(state.play>0)abG=Math.round(abG*1.3);
-    abG=Math.floor(abG);
+    abG = Math.floor(abG);
     state.subs+=abG;
-    state.subs=Math.floor(state.subs);
     state.vids.push({n:cutName,c:cutClips,a:abG});
     document.getElementById("vid-name").value="";
     document.getElementById("upload").disabled=true;
@@ -284,10 +275,9 @@ window.addEventListener("DOMContentLoaded",()=>{
     // Klicker
     let multi=1+0.05*state.shop[3]+(state.play>0?0.3:0);
     state.clips+=Math.floor(state.shop[1]*multi);
-    state.clips=Math.floor(state.clips);
     // Cutter (Video auto schneiden)
     if(state.shop[0]>0&&!cutting&&state.clips>=5){
-      let cnt=Math.min(10+state.shop[0]*2,state.clips);
+      let cnt=Math.floor(Math.min(10+state.shop[0]*2,state.clips));
       cutDur=Math.max(3200-Math.min(state.shop[0]*600,2600),700);
       cutting=true;cutClips=cnt;
       setTimeout(()=>{
@@ -295,35 +285,34 @@ window.addEventListener("DOMContentLoaded",()=>{
         cutName="Auto-Video "+(state.vids.length+1);
         let abG=10+Math.floor(Math.random()*cutClips*2)+(cutClips*state.shop[0]);
         if(state.play>0)abG=Math.round(abG*1.3);
-        abG=Math.floor(abG);
+        abG = Math.floor(abG);
         state.subs+=abG;
-        state.subs=Math.floor(state.subs);
         state.vids.push({n:cutName,c:cutClips,a:abG});
         save();updateAll();
       },cutDur);
-      state.clips-=cnt;state.clips=Math.floor(state.clips);
-      save();updateAll();
+      state.clips-=cnt;save();updateAll();
     }
     // Streamer
     if(state.twon&&state.shop[2]>0){
       state.tws+=Math.floor(state.shop[2]*multi);
       let abplus=Math.floor(Math.random()*20*multi)+5+state.shop[2]*3;
-      state.twsubs+=Math.floor(abplus);
+      abplus = Math.floor(abplus);
+      state.twsubs+=abplus;
     }
     // Lose Abos
     if(state.vids.length>5&&Math.random()<0.1){
       let loss=Math.floor(Math.random()*state.subs*0.01);
-      state.subs=Math.max(0,Math.floor(state.subs-loss));
+      state.subs=Math.max(0,state.subs-loss);
     }
     // Boost
     for(let i=state.play;i<boostAbo.length;i++){
-      if(state.subs>=boostAbo[i]){
+      if((state.subs+state.twsubs)>=boostAbo[i]){
         state.play=i+1;
         alert("Du hast den "+boostName[i]+" Play-Button erhalten!\n+30% Boost auf alles.");
       }
     }
     // Twitch Menü freischalten
-    if(!state.twon&&state.subs>=10000){
+    if(!state.twon&&(state.subs+state.twsubs)>=10000){
       state.twon=true;
       document.getElementById("nav-t").style.display="";
       document.getElementById("tw-name").style.display="";
@@ -343,15 +332,22 @@ function updateShop(){
     let up=state.shop[i]||0;
     let c=Math.round(it.base*Math.pow(1.85,up));
     let btn=document.createElement("button");
+    btn.className = "nice-btn";
     btn.textContent="Kaufen ("+c+" Abo)";
     btn.onclick=()=>{
-      if(state.subs>=c){
-        state.subs-=c;state.shop[i]++;
-        state.subs=Math.floor(state.subs);
-        save();updateShop();updateAll();
+      if((state.subs+state.twsubs)>=c){
+        // Erst von YT-Subs abziehen, dann von Twitch, falls nötig
+        let left = c;
+        if(state.subs>=left){
+          state.subs-=left;
+        } else {
+          left -= state.subs;
+          state.subs = 0;
+          state.twsubs = Math.max(0,state.twsubs-left);
+        }
+        state.shop[i]++;save();updateShop();updateAll();
       }
     };
-    btn.className="nice-btn";
     let d=document.createElement("div");
     d.className="shop-item";
     d.innerHTML=`<span>${it.n} <small>(Lvl ${up})</small><br><small>${it.desc}</small></span>`;
@@ -364,15 +360,20 @@ function updateShop(){
 function updateAll(){
   // Profil
   document.getElementById("p-name").value=state.name;
+  // Profilbild entfernt
+  // document.getElementById("p-img").src=state.img||defimg;
+  // Youtube Icon bleibt
   document.getElementById("y-img").src=defimg;
   document.getElementById("p-code").textContent=state.code;
-  document.getElementById("clips").textContent=Math.floor(state.clips);
-  document.getElementById("subs").textContent=Math.floor(state.subs);
-  document.getElementById("cclips").textContent=Math.floor(state.clips);
+  document.getElementById("clips").textContent = Math.floor(state.clips);
+  // Summe aller Abos
+  let allsubs = Math.floor(state.subs)+Math.floor(state.twsubs);
+  document.getElementById("subs").textContent = allsubs;
+  document.getElementById("cclips").textContent = Math.floor(state.clips);
   document.getElementById("tw-name").value=state.twname||"";
   document.getElementById("tw-img").src=deftw;
-  document.getElementById("tws").textContent=Math.floor(state.tws||0);
-  document.getElementById("tsubs").textContent=Math.floor(state.twsubs||0);
+  document.getElementById("tws").textContent=Math.floor(state.tws)||0;
+  document.getElementById("tsubs").textContent=Math.floor(state.twsubs)||0;
   document.getElementById("playb").style.display=state.play>0?"":"none";
   document.getElementById("playbt").style.display=state.play>0?"":"none";
   // Video-Liste
