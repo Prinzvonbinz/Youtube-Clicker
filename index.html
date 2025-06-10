@@ -2,12 +2,84 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>YouTube Clicker</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app"></div>
-  <script src="main.js"></script>
+  <div id="main-menu" class="menu">
+    <h1>YouTube Clicker</h1>
+    <input type="text" id="channel-name-input" placeholder="Kanalname eingeben..." maxlength="20">
+    <input type="file" id="profile-pic-input" accept="image/*">
+    <div id="profile-pic-preview" class="profile-pic"></div>
+    <button id="start-btn">Start</button>
+  </div>
+
+  <div id="game-menu" class="menu hidden">
+    <header>
+      <div id="user-profile" onclick="showProfileMenu()">
+        <div id="mini-profile-pic"></div>
+        <span id="mini-channel-name"></span>
+      </div>
+      <span id="subscribers">Abos: 0</span>
+      <span id="clips">Clips: 0</span>
+      <span id="play-btns"></span>
+      <button onclick="showShopMenu()">Shop</button>
+      <button onclick="showCutMenu()">Cut-Menü</button>
+      <button id="twitch-btn-menu" class="hidden" onclick="showTwitchMenu()">Twitch</button>
+      <button onclick="showProfileMenu()">Profil</button>
+    </header>
+    <main>
+      <button id="yt-main-btn" class="main-btn"></button>
+      <div id="yt-main-label">Klicke für Clips!</div>
+    </main>
+  </div>
+
+  <div id="shop-menu" class="menu hidden">
+    <h2>Shop</h2>
+    <div id="shop-items"></div>
+    <button onclick="hideShopMenu()">Zurück</button>
+  </div>
+
+  <div id="cut-menu" class="menu hidden">
+    <h2>Cut-Menü</h2>
+    <div id="cut-status"></div>
+    <button id="start-cut-btn">Video schneiden</button>
+    <button onclick="hideCutMenu()">Zurück</button>
+  </div>
+
+  <div id="twitch-menu" class="menu hidden">
+    <h2>Twitch</h2>
+    <input type="text" id="twitch-name-input" placeholder="Twitch-Kanalname..." maxlength="20">
+    <input type="file" id="twitch-pic-input" accept="image/*">
+    <div id="twitch-pic-preview" class="profile-pic"></div>
+    <button onclick="saveTwitchProfile()">Speichern</button>
+    <button id="twitch-main-btn" class="main-btn"></button>
+    <div id="twitch-main-label">Klicke für Twitch-Abos!</div>
+    <button onclick="hideTwitchMenu()">Zurück</button>
+  </div>
+
+  <div id="profile-menu" class="menu hidden">
+    <h2>Profil</h2>
+    <div>
+      <b>Kanal:</b> <span id="profile-channel-name"></span><br>
+      <b>Abos:</b> <span id="profile-subs"></span><br>
+      <b>Clips:</b> <span id="profile-clips"></span><br>
+      <b>Profilbild:</b><br><div id="profile-pic-big" class="profile-pic"></div>
+    </div>
+    <div>
+      <b>Account Code:</b>
+      <input id="profile-code" readonly>
+      <button onclick="copyProfileCode()">Kopieren</button>
+    </div>
+    <div>
+      <b>Account laden:</b>
+      <input type="text" id="profile-code-input" placeholder="Code eingeben...">
+      <button onclick="importProfile()">Importieren</button>
+    </div>
+    <button onclick="hideProfileMenu()">Zurück</button>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
