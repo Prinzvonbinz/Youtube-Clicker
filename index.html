@@ -2,12 +2,66 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Youtube Clicker</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="main"></div>
-  <script src="app.js"></script>
+<div id="menu-start" class="menu active">
+  <h1>Youtube Clicker</h1>
+  <input id="channelName" maxlength="20" placeholder="Kanalname">
+  <input id="channelPic" type="file" accept="image/*">
+  <button id="startBtn">Start</button>
+</div>
+
+<div id="menu-main" class="menu">
+  <div class="profile-bar">
+    <img id="profileImg" src="" alt="Profil" class="circle">
+    <span id="profileName"></span>
+    <button id="openProfile">Profil</button>
+  </div>
+  <div class="stats">
+    <div>Clips: <span id="clips">0</span></div>
+    <div>Videos: <span id="videos">0</span></div>
+    <div>Abos: <span id="subs">0</span></div>
+  </div>
+  <button id="youtubeBtn" class="big-btn"><img id="ytBtnImg" src="" alt="YT"></button>
+  <button id="toCut" class="sec-btn">Videos schneiden</button>
+  <button id="toShop" class="sec-btn">Shop</button>
+  <button id="toTwitch" class="sec-btn hide">Twitch</button>
+</div>
+
+<div id="menu-cut" class="menu">
+  <h2>Video schneiden</h2>
+  <div>Clips zum Verarbeiten: <span id="cutClips">0</span></div>
+  <input id="videoName" maxlength="20" placeholder="Videotitel">
+  <button id="cutBtn" class="big-btn">Schneiden</button>
+  <button id="toMain1" class="sec-btn">Zurück</button>
+  <div id="cutStatus"></div>
+</div>
+
+<div id="menu-shop" class="menu">
+  <h2>Shop</h2>
+  <div id="shopItems"></div>
+  <button id="toMain2" class="sec-btn">Zurück</button>
+</div>
+
+<div id="menu-profile" class="menu">
+  <h2>Profil</h2>
+  <img id="profileImg2" src="" alt="Profil" class="circle">
+  <div>Name: <span id="profileName2"></span></div>
+  <div>Code: <span id="accountCode"></span></div>
+  <input id="importCode" maxlength="100" placeholder="Account-Code importieren">
+  <button id="importBtn">Importieren</button>
+  <button id="toMain3" class="sec-btn">Zurück</button>
+</div>
+
+<!-- Twitch und Play-Button Menüs als Platzhalter -->
+<div id="menu-twitch" class="menu">
+  <h2>Twitch (Coming Soon)</h2>
+  <button id="toMain4" class="sec-btn">Zurück</button>
+</div>
+
+<script src="main.js"></script>
 </body>
 </html>
