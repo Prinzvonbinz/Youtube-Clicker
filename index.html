@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Youtube Clicker Game</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #181818; color: #fff; }
+        #game { max-width: 400px; margin: 30px auto; background: #232323; padding: 20px; border-radius: 10px; }
+        input, button, select { margin: 5px 0; padding: 8px; }
+        .upgrade { margin: 8px 0; padding: 10px; background: #333; border-radius: 5px; }
+        #profileimg { width: 64px; height: 64px; border-radius: 50%; background: #444; object-fit: cover; }
+    </style>
+</head>
+<body>
+<div id="game">
+    <div id="profile-setup">
+        <h2>Dein Youtube-Kanal</h2>
+        <label for="channelName">Kanalname:</label>
+        <input type="text" id="channelName"><br>
+        <label for="profilePicSelect">Profilbild:</label>
+        <select id="profilePicSelect">
+            <option value="avatar1.png">Avatar 1</option>
+            <option value="avatar2.png">Avatar 2</option>
+            <option value="avatar3.png">Avatar 3</option>
+        </select><br>
+        <button id="startGame">Starten</button>
+    </div>
+    <div id="main-game" style="display:none;">
+        <h2>
+            <img id="profileimg" src="avatar1.png" alt="Profilbild">
+            <span id="kanalname"></span>
+        </h2>
+        <p>Clips: <span id="clips">0</span></p>
+        <p>Videos: <span id="videos">0</span></p>
+        <p>Abonnenten: <span id="subs">0</span></p>
+        <button id="clipBtn">Clip machen 🎬 (+1 Clip)</button><br>
+        <button id="videoBtn">Video produzieren (kostet 10 Clips)</button>
+        <div id="twitchDiv" style="display:none;">
+            <button id="twitchBtn">Twitch Stream starten (kostet 2 Videos)</button>
+        </div>
+        <h3>Upgrades</h3>
+        <div class="upgrade">
+            <button id="autoClipBtn">AutoClipper kaufen (KOSTET 50 Clips) [Besitz: <span id="autoClipCount">0</span>]</button>
+        </div>
+        <div class="upgrade">
+            <button id="autoVideoBtn">AutoVideo kaufen (KOSTET 100 Videos) [Besitz: <span id="autoVideoCount">0</span>]</button>
+        </div>
+        <div class="upgrade" id="twitchUpgradeDiv">
+            <button id="twitchUpgradeBtn">Twitch freischalten (KOSTET 200 Abonnenten)</button>
+        </div>
+        <button onclick="resetGame()">Spiel zurücksetzen</button>
+    </div>
+</div>
+<script>
+const defaultState = {
+    kanalname: "",
+    profilbild: "avatar1.png",
+    clips: 0,
+    videos: 0,
+    subs: 0,
+    autoClip: 0,
+    autoVideo: 0,
+    twitchUnlocked: false
+};
+let state = {...defaultState};
+
+// --- Hilfsfunktionen für Storage ---
+function saveGame() {
+    localStorage.setItem("ytClickerGame", JSON.stringify(state));
+}
+function loadGame() {
+    const data = localStorage.getItem("ytClickerGame");
+    if (data) state = {...defaultState, ...JSON.parse(data)};
+}
+
+// --- UI/DOM aktualisieren ---
+function updateUI() {
+    document.getElementById("kanalname").textContent = state.kanalname;
+    document.getElementById("profileimg").src = state.profilbild;
+    document.getElementById("clips").textContent = state.clips;
+    document.getElementById("videos").textContent = state.videos;
+    document.getElementById("subs").textContent = state.subs;
+    document.getElementById("autoClipCount").textContent = state.autoClip;
+    document.getElementById("autoVideoCount").textContent = state.autoVideo;
+    document.getElementById("twitchDiv").style.display = state.twitchUnlocked ? "" : "none";
+    document.getElementById("twitchUpgradeDiv").style.display = state.twitchUnlocked ? "none" : "";
+}
+
+// --- Spiel-Logik ---
+function clipClick() {
+    state.clips += 1;
+    updateUI(); saveGame();
+}
+function makeVideo() {
+    if (state.clips >= 10) {
+        state.clips -= 10;
+        state.videos += 1;
+        state.subs += Math.floor(Math.random()*8)+3; // 3-10 Abonnenten pro Video
+        updateUI(); saveGame();
+    } else {
+        alert("Nicht genug Clips!");
+    }
+}
+function twitchStream() {
+    if (state.videos >= 2) {
+        state.videos -= 2;
+        state.subs += Math.floor(Math.random()*25)+10; // 10-34 Subs pro Stream
+        updateUI(); saveGame();
+    } else {
+        alert("Du brauchst mindestens 2 Videos für einen Stream!");
+    }
+}
+function buyAutoClip() {
+    if (state.clips >= 50) {
+        state.clips -= 50;
+        state.autoClip += 1;
+        updateUI(); saveGame();
+    } else {
+        alert("Nicht genug Clips!");
+    }
+}
+function buyAutoVideo() {
+    if (state.videos >= 100) {
+        state.videos -= 100;
+        state.autoVideo += 1;
+        updateUI(); saveGame();
+    } else {
+        alert("Nicht genug Videos!");
+    }
+}
+function unlockTwitch() {
+    if (state.subs >= 200) {
+        state.subs -= 200;
+        state.twitchUnlocked = true;
+        updateUI(); saveGame();
+    } else {
+        alert("Du brauchst mindestens 200 Abonnenten!");
+    }
+}
+// --- Automatisierung ---
+setInterval(() => {
+    if (state.autoClip > 0) {
+        state.clips += state.autoClip;
+        updateUI(); saveGame();
+    }
+    if (state.autoVideo > 0 && state.clips >= 10*state.autoVideo) {
+        state.clips -= 10*state.autoVideo;
+        state.videos += state.autoVideo;
+        state.subs += state.autoVideo * (Math.floor(Math.random()*8)+3);
+        updateUI(); saveGame();
+    }
+}, 1000);
+
+// --- Spielstart und Profilsetup ---
+document.getElementById("startGame").onclick = () => {
+    const name = document.getElementById("channelName").value.trim();
+    const pic = document.getElementById("profilePicSelect").value;
+    if (name) {
+        state.kanalname = name;
+        state.profilbild = pic;
+        document.getElementById("profile-setup").style.display = "none";
+        document.getElementById("main-game").style.display = "";
+        updateUI(); saveGame();
+    } else {
+        alert("Bitte gib einen Kanalnamen ein!");
+    }
+};
+
+// --- Buttons ---
+document.getElementById("clipBtn").onclick = clipClick;
+document.getElementById("videoBtn").onclick = makeVideo;
+document.getElementById("twitchBtn").onclick = twitchStream;
+document.getElementById("autoClipBtn").onclick = buyAutoClip;
+document.getElementById("autoVideoBtn").onclick = buyAutoVideo;
+document.getElementById("twitchUpgradeBtn").onclick = unlockTwitch;
+
+// --- Reset ---
+window.resetGame = function() {
+    if (confirm("Wirklich alles zurücksetzen?")) {
+        localStorage.removeItem("ytClickerGame");
+        location.reload();
+    }
+};
+
+// --- Laden ---
+window.onload = () => {
+    loadGame();
+    if (state.kanalname) {
+        document.getElementById("profile-setup").style.display = "none";
+        document.getElementById("main-game").style.display = "";
+        updateUI();<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Youtube Clicker Game</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #181818; color: #fff; }
+        #game { max-width: 400px; margin: 30px auto; background: #232323; padding: 20px; border-radius: 10px; }
+        input, button, select { margin: 5px 0; padding: 8px; }
+        .upgrade { margin: 8px 0; padding: 10px; background: #333; border-radius: 5px; }
+        #profileimg { width: 64px; height: 64px; border-radius: 50%; background: #444; object-fit: cover; }
+    </style>
+</head>
+<body>
+<div id="game">
+    <div id="profile-setup">
+        <h2>Dein Youtube-Kanal</h2>
+        <label for="channelName">Kanalname:</label>
+        <input type="text" id="channelName"><br>
+        <label for="profilePicSelect">Profilbild:</label>
+        <select id="profilePicSelect">
+            <option value="avatar1.png">Avatar 1</option>
+            <option value="avatar2.png">Avatar 2</option>
+            <option value="avatar3.png">Avatar 3</option>
+        </select><br>
+        <button id="startGame">Starten</button>
+    </div>
+    <div id="main-game" style="display:none;">
+        <h2>
+            <img id="profileimg" src="avatar1.png" alt="Profilbild">
+            <span id="kanalname"></span>
+        </h2>
+        <p>Clips: <span id="clips">0</span></p>
+        <p>Videos: <span id="videos">0</span></p>
+        <p>Abonnenten: <span id="subs">0</span></p>
+        <button id="clipBtn">Clip machen 🎬 (+1 Clip)</button><br>
+        <button id="videoBtn">Video produzieren (kostet 10 Clips)</button>
+        <div id="twitchDiv" style="display:none;">
+            <button id="twitchBtn">Twitch Stream starten (kostet 2 Videos)</button>
+        </div>
+        <h3>Upgrades</h3>
+        <div class="upgrade">
+            <button id="autoClipBtn">AutoClipper kaufen (KOSTET 50 Clips) [Besitz: <span id="autoClipCount">0</span>]</button>
+        </div>
+        <div class="upgrade">
+            <button id="autoVideoBtn">AutoVideo kaufen (KOSTET 100 Videos) [Besitz: <span id="autoVideoCount">0</span>]</button>
+        </div>
+        <div class="upgrade" id="twitchUpgradeDiv">
+            <button id="twitchUpgradeBtn">Twitch freischalten (KOSTET 200 Abonnenten)</button>
+        </div>
+        <button onclick="resetGame()">Spiel zurücksetzen</button>
+    </div>
+</div>
+<script>
+const defaultState = {
+    kanalname: "",
+    profilbild: "avatar1.png",
+    clips: 0,
+    videos: 0,
+    subs: 0,
+    autoClip: 0,
+    autoVideo: 0,
+    twitchUnlocked: false
+};
+let state = {...defaultState};
+
+// --- Hilfsfunktionen für Storage ---
+function saveGame() {
+    localStorage.setItem("ytClickerGame", JSON.stringify(state));
+}
+function loadGame() {
+    const data = localStorage.getItem("ytClickerGame");
+    if (data) state = {...defaultState, ...JSON.parse(data)};
+}
+
+// --- UI/DOM aktualisieren ---
+function updateUI() {
+    document.getElementById("kanalname").textContent = state.kanalname;
+    document.getElementById("profileimg").src = state.profilbild;
+    document.getElementById("clips").textContent = state.clips;
+    document.getElementById("videos").textContent = state.videos;
+    document.getElementById("subs").textContent = state.subs;
+    document.getElementById("autoClipCount").textContent = state.autoClip;
+    document.getElementById("autoVideoCount").textContent = state.autoVideo;
+    document.getElementById("twitchDiv").style.display = state.twitchUnlocked ? "" : "none";
+    document.getElementById("twitchUpgradeDiv").style.display = state.twitchUnlocked ? "none" : "";
+}
+
+// --- Spiel-Logik ---
+function clipClick() {
+    state.clips += 1;
+    updateUI(); saveGame();
+}
+function makeVideo() {
+    if (state.clips >= 10) {
+        state.clips -= 10;
+        state.videos += 1;
+        state.subs += Math.floor(Math.random()*8)+3; // 3-10 Abonnenten pro Video
+        updateUI(); saveGame();
+    } else {
+        alert("Nicht genug Clips!");
+    }
+}
+function twitchStream() {
+    if (state.videos >= 2) {
+        state.videos -= 2;
+        state.subs += Math.floor(Math.random()*25)+10; // 10-34 Subs pro Stream
+        updateUI(); saveGame();
+    } else {
+        alert("Du brauchst mindestens 2 Videos für einen Stream!");
+    }
+}
+function buyAutoClip() {
+    if (state.clips >= 50) {
+        state.clips -= 50;
+        state.autoClip += 1;
+        updateUI(); saveGame();
+    } else {
+        alert("Nicht genug Clips!");
+    }
+}
+function buyAutoVideo() {
+    if (state.videos >= 100) {
+        state.videos -= 100;
+        state.autoVideo += 1;
+        updateUI(); saveGame();
+    } else {
+        alert("Nicht genug Videos!");
+    }
+}
+function unlockTwitch() {
+    if (state.subs >= 200) {
+        state.subs -= 200;
+        state.twitchUnlocked = true;
+        updateUI(); saveGame();
+    } else {
+        alert("Du brauchst mindestens 200 Abonnenten!");
+    }
+}
+// --- Automatisierung ---
+setInterval(() => {
+    if (state.autoClip > 0) {
+        state.clips += state.autoClip;
+        updateUI(); saveGame();
+    }
+    if (state.autoVideo > 0 && state.clips >= 10*state.autoVideo) {
+        state.clips -= 10*state.autoVideo;
+        state.videos += state.autoVideo;
+        state.subs += state.autoVideo * (Math.floor(Math.random()*8)+3);
+        updateUI(); saveGame();
+    }
+}, 1000);
+
+// --- Spielstart und Profilsetup ---
+document.getElementById("startGame").onclick = () => {
+    const name = document.getElementById("channelName").value.trim();
+    const pic = document.getElementById("profilePicSelect").value;
+    if (name) {
+        state.kanalname = name;
+        state.profilbild = pic;
+        document.getElementById("profile-setup").style.display = "none";
+        document.getElementById("main-game").style.display = "";
+        updateUI(); saveGame();
+    } else {
+        alert("Bitte gib einen Kanalnamen ein!");
+    }
+};
+
+// --- Buttons ---
+document.getElementById("clipBtn").onclick = clipClick;
+document.getElementById("videoBtn").onclick = makeVideo;
+document.getElementById("twitchBtn").onclick = twitchStream;
+document.getElementById("autoClipBtn").onclick = buyAutoClip;
+document.getElementById("autoVideoBtn").onclick = buyAutoVideo;
+document.getElementById("twitchUpgradeBtn").onclick = unlockTwitch;
+
+// --- Reset ---
+window.resetGame = function() {
+    if (confirm("Wirklich alles zurücksetzen?")) {
+        localStorage.removeItem("ytClickerGame");
+        location.reload();
+    }
+};
+
+// --- Laden ---
+window.onload = () => {
+    loadGame();
+    if (state.kanalname) {
+        document.getElementById("profile-setup").style.display = "none";
+        document.getElementById("main-game").style.display = "";
+        updateUI();
+    }
+};
+</script>
+<!-- Beispiel Avatare (SVG oder PNG selbst erstellen und ins gleiche Verzeichnis legen, z. B. avatar1.png, avatar2.png, avatar3.png) -->
+</body>
+</html>
+    }
+};
+</script>
+<!-- Beispiel Avatare (SVG oder PNG selbst erstellen und ins gleiche Verzeichnis legen, z. B. avatar1.png, avatar2.png, avatar3.png) -->
+</body>
+  </html>
