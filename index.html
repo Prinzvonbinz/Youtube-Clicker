@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+0<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -14,10 +14,8 @@
       --white:#fff;
       --bl:rgba(0,0,0,0.7);
       --radius:1em;
-      --btn-shadow:0 4px 18px #0007,0 1.5px 8px #e5393533;
-      --btn-grad:linear-gradient(135deg,#e53935 0%,#ff6f54 100%);
-      --btn-grad-tw:linear-gradient(135deg,#6441a5 0%,#a084e8 100%);
-      --btn-grad-gold:linear-gradient(135deg,gold 0%,#fff7c0 100%);
+      --accent:#ff9800;
+      --btn-shadow:0 4px 12px #0004;
     }
     html,body{height:100%;margin:0;padding:0;background:var(--bg);color:var(--white);font-family:sans-serif;}
     body{display:flex;flex-direction:column;min-height:100vh;}
@@ -27,31 +25,20 @@
       background:var(--gray);
       border:0;
       color:var(--white);
-      padding:.7em 1.5em;
-      border-radius:1.2em;
+      padding:.6em 1.2em;
+      border-radius:.7em;
       font-weight:700;
-      font-size:1.14em;
       cursor:pointer;
       transition:.2s;
       box-shadow:var(--btn-shadow);
-      letter-spacing:.04em;
+      font-size:1.1em;
+      letter-spacing:.01em;
       outline:none;
-      border:2px solid transparent;
-      position:relative;
-      overflow:hidden;
-      z-index:1;
+      border-bottom:3px solid transparent;
     }
     nav button.active,nav button:hover{
-      background:var(--btn-grad);
-      color:var(--white);
-      border-color:#e53935cc;
-      transform:translateY(-1px) scale(1.04);
-      box-shadow:0 6px 22px #e5393540,0 1.5px 8px #fff4;
-    }
-    nav button.twitch-btn.active,nav button.twitch-btn:hover{
-      background:var(--btn-grad-tw)!important;
-      border-color:#6441a5cc;
-      color:#fff;
+      background:var(--red);
+      border-bottom:3px solid var(--accent);
     }
     main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:400px;}
     .menu{display:none;max-width:98vw;width:410px;}
@@ -66,88 +53,100 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      background:var(--btn-grad);
-      box-shadow:0 8px 32px #e5393540,0 2px 12px #fff4;
+      background:var(--gray);
+      box-shadow:var(--btn-shadow);
       cursor:pointer;
       margin:1.4em 0 1em 0;
       transition:.1s;
       position:relative;
       outline:none;
-      border:3px solid #fff2;
+      border:4px solid var(--accent);
     }
-    .twitch-btn.big-btn{
-      background:var(--btn-grad-tw)!important;
-      color:#fff;
-      border-color:#6441a5cc;
-    }
-    .play-btn.big-btn{
-      background:var(--btn-grad-gold)!important;
-      color:#333;
-      border-color:gold;
-      font-weight:900;
-    }
-    .big-btn img{width:75%;height:75%;object-fit:cover;}
-    .big-btn::after{
-      content:"";
-      display:block;
-      position:absolute;
-      inset:0;
-      border-radius:50%;
-      box-shadow:0 0 16px #fff6;
-      pointer-events:none;
-    }
-    .stat{font-size:1.24em;margin-bottom:.5em;word-break:break-all;}
+    .big-btn img{width:100%;height:100%;object-fit:cover;}
+    .big-btn::after{content:"";display:block;position:absolute;inset:0;border-radius:50%;box-shadow:0 0 16px #fff6;pointer-events:none;}
+    .stat{font-size:1.2em;margin-bottom:.5em;word-break:break-all;}
     .shop{display:flex;flex-direction:column;gap:.7em;margin:1.2em 0;}
     .shop-item{display:flex;justify-content:space-between;align-items:center;background:var(--gray);padding:1em;border-radius:var(--radius);}
     .shop-item span{font-weight:700;}
     .shop-item button{
-      background:var(--btn-grad);
+      background:var(--red);
       color:var(--white);
       border:0;
-      padding:.5em 1.2em;
-      border-radius:.9em;
+      padding:.5em 1.3em;
+      border-radius:1em;
       font-size:1.07em;
-      font-weight:700;
       cursor:pointer;
+      font-weight:700;
       box-shadow:var(--btn-shadow);
       transition:.15s;
       outline:none;
-      border:2px solid transparent;
     }
-    .shop-item button:hover,.shop-item button:focus{
-      background:var(--btn-grad-gold);
-      color:#333;
-      border-color:gold;
-      transform:scale(1.05);
+    .shop-item button:active,
+    .shop-item button:hover {
+      background:var(--accent);
+      color:var(--gray);
+      transform:scale(1.04);
     }
-    input[type="text"],input[type="number"]{
+    .input-img{display:none;}
+    input[type="file"]{display:none;}
+    .profile label{display:none;}
+    .profile input[type="text"]{
       width:90%;
       max-width:270px;
-      padding:.5em .7em;
-      border-radius:.7em;
-      border:1.7px solid #555;
+      padding:.5em .9em;
+      border-radius:1em;
+      border:1.5px solid #444;
       background:var(--bg);
       color:var(--white);
-      margin-bottom:.6em;
+      margin-bottom:.7em;
       font-size:1.08em;
       outline:none;
-      box-shadow:0 2px 8px #0001;
-      transition:.13s;
+      transition:.2s;
+      box-shadow:0 2px 8px #0002;
     }
-    input[type="text"]:focus,input[type="number"]:focus{border-color:var(--red);}
-    .profile label{display:none;}
     .profile .code{word-break:break-all;font-size:1em;background:var(--gray);padding:.5em 1em;border-radius:var(--radius);margin-top:.5em;}
     .profile .load{margin-top:.8em;}
     .vid-list{max-height:160px;overflow:auto;border-radius:8px;background:var(--gray);padding:.7em .7em 0 .7em;margin:1em 0 0 0;}
     .vid-list span{display:block;border-bottom:1px solid #333;padding:.2em 0;}
     .flex-row{display:flex;flex-direction:row;align-items:center;gap:.8em;}
+    .twitch-btn{background:var(--tw)!important;}
+    .play-btn{background:gold;color:#333;font-weight:900;}
     .boost{color:gold;}
-    .note{color:#ccc;font-size:.97em;}
+    .note{color:#ccc;font-size:.98em;}
+    .nicer-btn{
+      display:inline-block;
+      background:var(--accent);
+      color:var(--gray);
+      border:0;
+      padding:.7em 2.2em;
+      border-radius:2em;
+      font-size:1.08em;
+      font-weight:700;
+      margin:.7em 0;
+      cursor:pointer;
+      box-shadow:var(--btn-shadow);
+      transition:.18s;
+      outline:none;
+      letter-spacing:.03em;
+    }
+    .nicer-btn:active,
+    .nicer-btn:hover {
+      background:var(--red);
+      color:var(--white);
+      transform:scale(1.04);
+    }
+    .nicer-btn[disabled]{
+      opacity:.5;
+      background:var(--gray);
+      color:#aaa;
+      cursor:not-allowed;
+    }
     @media (max-width:600px) {
       .menu{width:98vw;}
       .big-btn{width:120px;height:120px;}
       header{font-size:1.15em;}
       .vid-list{max-height:90px;}
+      .profile input[type="text"]{font-size:.98em;}
     }
   </style>
 </head>
@@ -158,16 +157,18 @@
   <button id="nav-c">Videos</button>
   <button id="nav-s">Shop</button>
   <button id="nav-p">Profil</button>
-  <button id="nav-t" style="display:none" class="twitch-btn">Twitch</button>
+  <button id="nav-t" style="display:none">Twitch</button>
 </nav>
 <main>
   <!-- YouTube Menü -->
   <div class="menu active" id="m-y">
     <div class="center">
-      <button class="big-btn" id="y-btn" title="Clips produzieren"><img src="https://img.icons8.com/color/452/youtube-play.png" id="y-img" alt="Profil"></button>
+      <button class="big-btn" id="y-btn" title="Clips produzieren">
+        <img src="https://img.icons8.com/color/452/youtube-play.png" id="y-img" alt="Profil">
+      </button>
       <div class="stat">Clips: <span id="clips">0</span></div>
       <div class="stat">Abos: <span id="subs">0</span> <span id="playb" style="display:none" class="boost">+30% Boost</span></div>
-      <button id="to-cut" style="margin:.8em 0 .5em 0">Clips schneiden</button>
+      <button id="to-cut" class="nicer-btn">Clips schneiden</button>
       <div class="note">Sammle Clips und schneide daraus Videos, um Abonnenten zu gewinnen!</div>
     </div>
   </div>
@@ -176,9 +177,9 @@
     <div class="center">
       <div class="stat">Clips: <span id="cclips">0</span></div>
       <input type="number" min="1" max="50" id="cut-cnt" value="5" style="width:50px;">
-      <button id="do-cut">Video schneiden</button>
+      <button id="do-cut" class="nicer-btn">Video schneiden</button>
       <input type="text" id="vid-name" placeholder="Videoname" maxlength="30" style="margin-top:.7em;">
-      <button id="upload" disabled>Video hochladen</button>
+      <button id="upload" class="nicer-btn" disabled>Video hochladen</button>
       <div class="note" id="cut-note">Mind. 5 Clips nötig. Je mehr Clips, desto mehr Abos!</div>
       <div id="cut-prog" style="margin:.8em 0;color:gold;"></div>
       <div class="vid-list" id="vids"></div>
@@ -194,15 +195,16 @@
     <div style="text-align:center;">
       <!-- Profilbild entfernt -->
     </div>
-    <input type="text" id="p-name" placeholder="YouTube-Kanalname" maxlength="20">
+    <input type="text" id="p-name" placeholder="YouTube-Kanalname" maxlength="20" autocomplete="off">
     <div style="margin:.7em 0 1em 0"><strong>Profilcode:</strong><br><span class="code" id="p-code"></span></div>
     <div class="load">
       <input type="text" id="load-code" placeholder="Code eingeben & laden" maxlength="32">
-      <button id="btn-load">Laden</button>
+      <button id="btn-load" class="nicer-btn">Laden</button>
     </div>
     <div style="margin-top:1em;">
       <input type="text" id="tw-name" placeholder="Twitch-Kanalname" maxlength="20" style="display:none;">
       <!-- Twitch-Profilbild entfernt -->
+      <label for="tw-upload" id="tw-lab" style="display:none;"></label>
     </div>
   </div>
   <!-- Twitch Menü -->
@@ -233,7 +235,7 @@ let state={
 };
 let cutClips=0,cutting=false,cutDur=0,cutName="";
 function save(){
-  // Kanalname wird IMMER gespeichert, sobald eingegeben
+  // Der Kanalname wird immer gespeichert
   localStorage.setItem("ytclicker_"+state.code,JSON.stringify(state));
   localStorage.setItem("ytclicker_last",state.code);
 }
@@ -263,13 +265,24 @@ window.addEventListener("DOMContentLoaded",()=>{
       if(m)m.classList.add("active");
     };
   });
-  // Profil (nur Kanalname)
-  document.getElementById("p-name").oninput=e=>{
+  // Profilbild entfernt
+
+  // Kanalname speichern bei Eingabe
+  const pname=document.getElementById("p-name");
+  pname.value=state.name||"";
+  pname.oninput=e=>{
     state.name=e.target.value;
-    save(); // Speichere sofort bei Eingabe!
+    save();
     updateAll();
   };
-  // Twitch Name
+  pname.onblur = function() {
+    // Speichern bei Verlassen des Feldes
+    state.name=this.value;
+    save();
+    updateAll();
+  };
+
+  // Twitch Bild+Name
   document.getElementById("tw-name").oninput=e=>{
     state.twname=e.target.value;save();updateAll();
   }
@@ -283,6 +296,7 @@ window.addEventListener("DOMContentLoaded",()=>{
     let multi=1+0.05*state.shop[3]+(state.play>0?0.3:0);
     let plus=1+state.shop[1];
     state.clips+=Math.round(plus*multi);
+    state.clips=Math.floor(state.clips);
     save();updateAll();
   }
   // Twitch Button
@@ -290,10 +304,11 @@ window.addEventListener("DOMContentLoaded",()=>{
     let multi=1+0.05*state.shop[3]+(state.play>0?0.3:0);
     let plus=1+state.shop[2];
     state.tws+=Math.round(plus*multi);
+    state.tws=Math.floor(state.tws);
     save();updateAll();
     // Streams geben extra Twitch Abos
     let abplus=Math.floor(Math.random()*20*multi)+5+state.shop[2]*3;
-    state.twsubs+=abplus;
+    state.twsubs+=Math.floor(abplus);
     save();updateAll();
   }
   // Cut
@@ -314,15 +329,17 @@ window.addEventListener("DOMContentLoaded",()=>{
       document.getElementById("upload").disabled=false;
       document.getElementById("cut-prog").textContent="Fertig! Jetzt hochladen.";
     },cutDur);
-    state.clips-=cnt;save();updateAll();
+    state.clips-=cnt;
+    state.clips=Math.floor(state.clips);
+    save();updateAll();
   };
   // Upload
   document.getElementById("upload").onclick=()=>{
     if(!cutName)return;
     let abG=10+Math.floor(Math.random()*cutClips*2)+(cutClips*state.shop[0]);
     if(state.play>0)abG=Math.round(abG*1.3);
-    state.subs+=abG;
-    state.vids.push({n:cutName,c:cutClips,a:abG});
+    state.subs+=Math.floor(abG);
+    state.vids.push({n:cutName,c:cutClips,a:Math.floor(abG)});
     document.getElementById("vid-name").value="";
     document.getElementById("upload").disabled=true;
     document.getElementById("cut-prog").textContent="";
@@ -334,7 +351,8 @@ window.addEventListener("DOMContentLoaded",()=>{
   setInterval(()=>{
     // Klicker
     let multi=1+0.05*state.shop[3]+(state.play>0?0.3:0);
-    state.clips+=Math.round(state.shop[1]*multi);
+    state.clips+=state.shop[1]*multi;
+    state.clips=Math.floor(state.clips);
     // Cutter (Video auto schneiden)
     if(state.shop[0]>0&&!cutting&&state.clips>=5){
       let cnt=Math.min(10+state.shop[0]*2,state.clips);
@@ -345,22 +363,25 @@ window.addEventListener("DOMContentLoaded",()=>{
         cutName="Auto-Video "+(state.vids.length+1);
         let abG=10+Math.floor(Math.random()*cutClips*2)+(cutClips*state.shop[0]);
         if(state.play>0)abG=Math.round(abG*1.3);
-        state.subs+=abG;
-        state.vids.push({n:cutName,c:cutClips,a:abG});
+        state.subs+=Math.floor(abG);
+        state.vids.push({n:cutName,c:cutClips,a:Math.floor(abG)});
         save();updateAll();
       },cutDur);
-      state.clips-=cnt;save();updateAll();
+      state.clips-=cnt;
+      state.clips=Math.floor(state.clips);
+      save();updateAll();
     }
     // Streamer
     if(state.twon&&state.shop[2]>0){
-      state.tws+=Math.round(state.shop[2]*multi);
+      state.tws+=state.shop[2]*multi;
+      state.tws=Math.floor(state.tws);
       let abplus=Math.floor(Math.random()*20*multi)+5+state.shop[2]*3;
-      state.twsubs+=abplus;
+      state.twsubs+=Math.floor(abplus);
     }
     // Lose Abos
     if(state.vids.length>5&&Math.random()<0.1){
       let loss=Math.floor(Math.random()*state.subs*0.01);
-      state.subs=Math.max(0,state.subs-loss);
+      state.subs=Math.max(0,Math.floor(state.subs-loss));
     }
     // Boost
     for(let i=state.play;i<boostAbo.length;i++){
@@ -370,10 +391,11 @@ window.addEventListener("DOMContentLoaded",()=>{
       }
     }
     // Twitch Menü freischalten
-    if(!state.twon&&state.subs>=50000){
+    if(!state.twon&&state.subs>=10000){
       state.twon=true;
       document.getElementById("nav-t").style.display="";
       document.getElementById("tw-name").style.display="";
+      document.getElementById("tw-lab").style.display="";
       save();
     }
     save();updateAll();
@@ -390,6 +412,7 @@ function updateShop(){
     let c=Math.round(it.base*Math.pow(1.85,up));
     let btn=document.createElement("button");
     btn.textContent="Kaufen ("+c+" Abo)";
+    btn.className="nicer-btn";
     btn.onclick=()=>{
       if(state.subs>=c){
         state.subs-=c;state.shop[i]++;save();updateShop();updateAll();
@@ -406,8 +429,9 @@ function updateShop(){
 // UI Update
 function updateAll(){
   // Profil
-  document.getElementById("p-name").value=state.name;
+  document.getElementById("p-name").value=state.name||"";
   // Profilbild entfernt
+  // document.getElementById("p-img").src=state.img||defimg;
   document.getElementById("y-img").src=defimg;
   document.getElementById("p-code").textContent=state.code;
   document.getElementById("clips").textContent=Math.floor(state.clips);
@@ -415,16 +439,15 @@ function updateAll(){
   document.getElementById("cclips").textContent=Math.floor(state.clips);
   document.getElementById("tw-name").value=state.twname||"";
   document.getElementById("tw-img").src=deftw;
-  document.getElementById("tws").textContent=Math.floor(state.tws||0);
-  document.getElementById("tsubs").textContent=Math.floor(state.twsubs||0);
+  document.getElementById("tws").textContent=Math.floor(state.tws)||0;
+  document.getElementById("tsubs").textContent=Math.floor(state.twsubs)||0;
   document.getElementById("playb").style.display=state.play>0?"":"none";
   document.getElementById("playbt").style.display=state.play>0?"":"none";
   // Video-Liste
   let v=document.getElementById("vids");v.innerHTML="";
   state.vids.slice(-15).reverse().forEach(vid=>{
-    let c = Math.floor(vid.c), a = Math.floor(vid.a);
     let e=document.createElement("span");
-    e.textContent=vid.n+" ("+c+" Clips, +"+a+" Abos)";
+    e.textContent=vid.n+" ("+vid.c+" Clips, +"+vid.a+" Abos)";
     v.appendChild(e);
   });
   // Shop
